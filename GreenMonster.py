@@ -6,16 +6,20 @@ Code by A.J. Zec
 
 import tkinter as tk
 from tkinter import ttk
+import distutils.util
 import os
 import webbrowser
 
-import tabs.gm_bmw as bmw
+# import tabs.gm_bmw as bmw
 import tabs.gm_scan as scan_util
-import tabs.gm_timeboard as tmbd
-import tabs.gm_vqwk as vqwk
-import tabs.gm_adc18 as adc18s
-import tabs.gm_vxworks as vxworks
-import utils as u
+import tabs.gm_timeboard_injonly as tmbd
+import tabs.gm_vqwk_injonly as vqwk
+# import tabs.gm_adc18 as adc18s
+# import tabs.gm_adc18_rtspec as adc18s_rtspec
+# import tabs.gm_adc18_lftspec as adc18s_lftspec
+#import tabs.gm_vxworks as vxworks
+import gm_colors as gmc
+import RemexClient as Remex
 
 class GreenMonster:
 
@@ -23,18 +27,21 @@ class GreenMonster:
         os.environ["TCL_LIBRARY"] = "/lib64/tcl8.5/"
         self.win = tk.Tk()
         self.win.title("Green Monster")
-        self.win.configure(background=u.green_color)
+        self.win.configure(background=gmc.green)
         self.adc_options_vars = [tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar()]
         self.bm_test_setting = tk.StringVar()
         self.clean_setting = tk.StringVar()
         self.get_green_monster_style()
+        # Example: self.cmsg   = CMsgServer(RemexClientLib,            CMsgHost             ,          CMsgPassword              )
+        # Example: self.cmsg   = CMsgServer(RemexClientLib, bytes("adaq1.jlab.org", "utf-8"), bytes("MollerIntegrating", "utf-8"))
+        self.cmsg = Remex.CMsgServer(Remex.RemexClientLib, None, None)
         self.create_widgets()
 
     def get_green_monster_style(self):
         style = ttk.Style()
         style.theme_create("green_monster", parent="alt", settings={
-            "TNotebook": {"configure": {"background": u.green_color}},
-            "TNotebook.Tab": {"configure": {"background": u.green_color}}})
+            "TNotebook": {"configure": {"background": gmc.green}},
+            "TNotebook.Tab": {"configure": {"background": gmc.green}}})
         style.theme_use("green_monster")
 
     def quit(self):
@@ -45,12 +52,34 @@ class GreenMonster:
     def educate_yourself(self, event):
       webbrowser.open_new(r"https://en.wikipedia.org/wiki/Green_Monster")
 
+    def checkHRSflag(self):
+      hrsinfile = open("/adaqfs/home/apar/devices/PyGreenMonster/includeHRS.flags",'r')
+      tmp="False"
+      for line in hrsinfile:
+        print("Include HRSs = " + line)
+        tmp=bool(distutils.util.strtobool(line.strip('\n')))
+        print("Include HRSs = " + str(tmp))
+        return tmp
+
     def expert_tab(self, expt_tab):
         tab_control = ttk.Notebook(expt_tab)
-        tab_titles = [('TimeBoard', tmbd.Timeboard), 
-                      ('VQWK ADCs', vqwk.VQWK), 
-                      ('ADC18s, CH', adc18s.ADC18), 
-                      ('VXWorks Server', vxworks.VXWorks)]
+        tab_titles = []
+        if self.checkHRSflag():
+          tab_titles = [('TimeBoard', tmbd.Timeboard), 
+                        ('VQWK ADCs', vqwk.VQWK), 
+                        #('ADC18s, CH', adc18s.ADC18),
+                        # FIXME No HRSs
+#                        ('ADC18s, RtSpec', adc18s_rtspec.ADC18), 
+#                        ('ADC18s, LftSpec',adc18s_lftspec.ADC18),
+                        #('VXWorks Server', vxworks.VXWorks)
+                        ]
+        else:
+          tab_titles = [('TimeBoard', tmbd.Timeboard), 
+                        ('VQWK ADCs', vqwk.VQWK), 
+                        #('ADC18s, CH', adc18s.ADC18),
+                        # FIXME No HRSs
+                        #('VXWorks Server', vxworks.VXWorks)
+                        ]
         for title, fn in tab_titles:
             sub_tab = ttk.Frame(tab_control, width=800, height=600, style="My.TFrame")
             tab_control.add(sub_tab, text=title)
@@ -59,24 +88,27 @@ class GreenMonster:
 
     def create_widgets(self):
         gui_style = ttk.Style()
-        gui_style.configure('My.TButton', foreground=u.green_color)
-        gui_style.configure('My.TFrame', background=u.green_color)
+        gui_style.configure('My.TButton', foreground=gmc.green)
+        gui_style.configure('My.TFrame', background=gmc.green)
 
         tab_control = ttk.Notebook(self.win)
-        tab_titles = [('BMW', bmw.BMW), 
-                      ('ScanUtil', scan_util.ScanUtil), 
-                      ('Expert', self.expert_tab)]
+        tab_titles = [#('BMW', bmw.BMW), 
+                      ('ScanUtil', scan_util.ScanUtil)]
+                      #('Expert', self.expert_tab)]
         for title, fn in tab_titles:
             tab = ttk.Frame(tab_control, width=800, height=600, style="My.TFrame")
             tab_control.add(tab, text=title)
-            fn(tab)
+            if "ScanUtil" in title:
+              fn(tab,self, "ROC-isb")
+            else:
+              fn(tab)
         tab_control.grid(row=0, column=0, columnspan=2)
         fenway = tk.PhotoImage(file='gm.ppm')
-        fenway_pahk = tk.Label(self.win, image=fenway, cursor="hand2", bg=u.green_color)
+        fenway_pahk = tk.Label(self.win, image=fenway, cursor="hand2", bg=gmc.green)
         fenway_pahk.image = fenway
         fenway_pahk.grid(row=1, column=0, padx=5, pady=10, sticky='SW')
         fenway_pahk.bind("<Button-1>", self.educate_yourself)
-        tk.Button(self.win, text='QUIT', command=quit, background=u.green_color, width=20, height=4).grid(
+        tk.Button(self.win, text='QUIT', command=quit, background=gmc.green, width=20, height=4).grid(
             row=1, column=1, padx=15, pady=5, sticky='SE')
 
 green_monster = GreenMonster()

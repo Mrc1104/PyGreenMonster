@@ -21,7 +21,9 @@
 #include "cfSock.h"
 
 /* Name or IP addresses of the various servers inet on ethernet*/
-char * ServerName_CountingHouse="129.57.164.13"; 
+//  2023nov08, pking:  Changed the Counting House IP address to be "129.57.192.103"
+//  2024feb18, pking:  Finally realized I had the wrong IP for CH, it should be 129.57.192.146
+char * ServerName_CountingHouse="129.57.192.146"; //  Previously was "129.57.164.13"; 
 char * ServerName_LeftSpect="129.57.192.14";  
 char * ServerName_RightSpect="129.57.192.60"; 
 /*char * ServerName_Injector="129.57.206.10"; */   
