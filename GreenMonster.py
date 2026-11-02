@@ -12,13 +12,13 @@ import webbrowser
 
 # import tabs.gm_bmw as bmw
 import tabs.gm_scan as scan_util
-import tabs.gm_timeboard_injonly as tmbd
-import tabs.gm_vqwk_injonly as vqwk
+#import tabs.gm_timeboard_injonly as tmbd
+#import tabs.gm_vqwk_injonly as vqwk
 # import tabs.gm_adc18 as adc18s
 # import tabs.gm_adc18_rtspec as adc18s_rtspec
 # import tabs.gm_adc18_lftspec as adc18s_lftspec
 #import tabs.gm_vxworks as vxworks
-import gm_colors as gmc
+import GUI.Colors as gmc
 import RemexClient as Remex
 
 class GreenMonster:
