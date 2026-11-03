@@ -1,1 +1,0 @@
-g++ c_api.cxx -l:myRemexLib.so -L./ -I $CODA/common/include
