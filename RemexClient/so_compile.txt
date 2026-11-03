@@ -1,1 +1,0 @@
-g++ -fPIC -shared -o myRemexLib.so -I $CODA/common/include -lcmsg -lcmsgRegex -L $CODA/Linux-x86_64/lib Client.cxx  ClientTypes.cxx  CMsgMessages.cxx  CMsgServer.cxx
