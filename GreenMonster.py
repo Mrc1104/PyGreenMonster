@@ -10,7 +10,7 @@ import distutils.util
 import os
 import webbrowser
 
-import tabs.gm_scan as scan_util
+import GUI.tabs.gm_scan as scan_util
 import GUI.Colors as gmc
 import RemexClient.RemexClient as Remex
 
@@ -88,7 +88,7 @@ class GreenMonster:
             else:
               fn(tab)
         tab_control.grid(row=0, column=0, columnspan=2)
-        fenway = tk.PhotoImage(file='gm.ppm')
+        fenway = tk.PhotoImage(file='GUI/Resources/gm.ppm')
         fenway_pahk = tk.Label(self.win, image=fenway, cursor="hand2", bg=gmc.green)
         fenway_pahk.image = fenway
         fenway_pahk.grid(row=1, column=0, padx=5, pady=10, sticky='SW')
