@@ -7,11 +7,11 @@ Code by A.J. Zec
 
 import tkinter as tk
 from tkinter import ttk
-import utils as u
+import GUI.utils as u
 import os
 import subprocess
-import RemexClient as Remex
-import gm_colors as gmc
+import RemexClient.RemexClient as Remex
+import GUI.Colors as gmc
 
 SCAN_GET_DATA	=1001
 SCAN_SET_DATA	=1002
