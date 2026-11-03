@@ -39,3 +39,9 @@ install(TARGETS ${PROJECT_NAME}
     EXPORT ${CMAKE_PROJECT_NAME}
     FILE_SET HEADERS
 )
+
+# Need to tell RemexClient.py where the lib resides
+file(GENERATE
+     OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/config/config.py"
+	 INPUT "${CMAKE_CURRENT_SOURCE_DIR}/config/config.py.in"
+)
