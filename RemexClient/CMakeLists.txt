@@ -18,14 +18,14 @@ add_compile_options(-Wall -Wextra)
 #----------------------------------------------------------------------------
 # Remex library
 #
-find_package(CODA REQUIRED COMPONENTS
+find_package(Remex REQUIRED COMPONENTS
 	cmsg remex
 )
 
 add_library(${PROJECT_NAME} SHARED ${SRC})
 target_link_libraries(${PROJECT_NAME} PUBLIC
-	CODA::cmsg
-	CODA::remex
+	Remex::cmsg
+	Remex::remex
 )
 
 target_sources(${PROJECT_NAME}
