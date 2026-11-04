@@ -14,7 +14,7 @@ import GUI.tabs.gm_scan as scan_util
 import GUI.tabs.gm_bmw as beam_mod
 import GUI.tabs.gm_ex  as example
 import GUI.Colors as gmc
-import RemexClient.RemexClient as Remex
+import Bindings.RemexClient as Remex
 
 class GreenMonster:
 

@@ -1,9 +1,11 @@
 from enum import IntEnum
 from typing import Union
+from pathlib import Path
 import ctypes
 import os
-from .config.config import REMEX_LIB_PATH
-RemexClientLib = ctypes.CDLL(REMEX_LIB_PATH)
+_dir = Path(__file__).parent.resolve()
+_lib_name = "libRemexClient.so"
+RemexClientLib = ctypes.CDLL(str(_dir / _lib_name))
 
 # https://dbader.org/blog/python-ctypes-tutorial-part-2
 def wrap_function(lib, funcname, restype, argtypes):
