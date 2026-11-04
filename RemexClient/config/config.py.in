@@ -1,6 +1,0 @@
-# config.py.in
-import os
-from pathlib import Path
-
-# This placeholder will be evaluated and filled by CMake at generation time
-REMEX_LIB_PATH = Path(r"$<TARGET_FILE:RemexClient>")

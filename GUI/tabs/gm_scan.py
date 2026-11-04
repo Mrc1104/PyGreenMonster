@@ -10,7 +10,7 @@ from tkinter import ttk
 import GUI.utils as u
 import os
 import subprocess
-import RemexClient.RemexClient as Remex
+import Bindings.RemexClient as Remex
 import GUI.Colors as gmc
 
 SCAN_GET_DATA	=1001

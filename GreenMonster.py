@@ -12,7 +12,7 @@ import webbrowser
 
 import GUI.tabs.gm_scan as scan_util
 import GUI.Colors as gmc
-import RemexClient.RemexClient as Remex
+import Bindings.RemexClient as Remex
 
 class GreenMonster:
 
