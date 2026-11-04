@@ -11,6 +11,8 @@ import os
 import webbrowser
 
 import GUI.tabs.gm_scan as scan_util
+import GUI.tabs.gm_bmw as beam_mod
+import GUI.tabs.gm_ex  as example
 import GUI.Colors as gmc
 import RemexClient.RemexClient as Remex
 
@@ -77,8 +79,10 @@ class GreenMonster:
         gui_style.configure('My.TFrame', background=gmc.green)
 
         tab_control = ttk.Notebook(self.win)
-        tab_titles = [#('BMW', bmw.BMW), 
-                      ('ScanUtil', scan_util.ScanUtil)]
+        tab_titles = [#('ScanUtil', scan_util.ScanUtil),
+                      ('BMW', beam_mod.BMW), 
+                      ('EX' , example.Example)]
+                      #('ScanUtil', scan_util.ScanUtil)]
                       #('Expert', self.expert_tab)]
         for title, fn in tab_titles:
             tab = ttk.Frame(tab_control, width=800, height=600, style="My.TFrame")
