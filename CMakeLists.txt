@@ -9,3 +9,4 @@ file(MAKE_DIRECTORY ${PYTHON_LIBRARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PYTHON_LIBRARY_DIR}")
 
 add_subdirectory(RemexClient)
+add_subdirectory(BMW)
