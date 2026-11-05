@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import GUI.utils as u
 import GUI.Colors as gmc
-import RemexClient.RemexClient as Remex
+import Bindings.RemexClient as Remex
 
 class LabeledEntry:
     def __init__(self, parent, label, default_entry="",rw="normal", tk_var=None):
