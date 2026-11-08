@@ -2,6 +2,8 @@
 #include "MetaData.h"
 #include "Waveforms.h"
 #include "Status.h"
+#include "Message.h"
+#include "Sender.h"
 
 namespace BMW
 {
@@ -16,7 +18,7 @@ namespace BMW
 
 		bool isEnergyModulator() const;
 	public:
-		Coil(Meta const& meta);
+		Coil(Meta const& meta, Sender<Message> sender);
 		void SetAmplitude(double const input);
 		void SetWave(WaveformType const input);
 		void SetFrequency(double const input);

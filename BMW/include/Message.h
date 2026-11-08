@@ -1,10 +1,9 @@
 #pragma once
 #include "Queue.h"
-namespace BMW
-{
-	enum MesageType
+extern "C" {
+	enum BMWMesageType
 	{
-		Status,
+		Status = 0,
 		Cycles,
 		SineWave,
 		RampWave,
@@ -13,10 +12,13 @@ namespace BMW
 		Error
 	};
 
-	struct Message
+	struct BMWMessage
 	{
 		int id;
 		MesageType type;
 		void* data;
 	};
+
+	typedef void* BMWReceiver;
 };
+

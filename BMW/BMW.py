@@ -21,3 +21,22 @@ class OpaquePointer(ctypes.c_void_p):
 class WaveformType(IntEnum):
     Sine   = 0
     Ramp   = 1
+
+class MessageType(IntEnum):
+		Status   = 0
+		Cycles   = 1
+		SineWave = 2
+		RampWave = 3
+		Ampl     = 4
+		Freq     = 5
+		Error    = 6
+
+class Message(ctypes.Structure):
+    _fields_ = [("id"  , ctypes.c_int),
+                ("type", ctypes.c_int ),
+                ("contents", ctypes.c_void_p)]
+    def status(self):
+        return MessageType(self.type)
+    def __repr__(self):
+        return '(msg received id: {0}{1})'.format(self.success, self.values)
+
