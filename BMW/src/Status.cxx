@@ -50,8 +50,8 @@ void State::Attach(std::string_view pv)
 
 Status State::GetStatus() const { return convertToStatus(status_.Load()); }
 
-void State::Update(int const& data) override
+void State::Update(int const& data)
 {
-	status_Store(data);
+	status_.Store(data);
 	// Notify
 }
