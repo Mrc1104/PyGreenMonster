@@ -1,6 +1,18 @@
 #include "Waveforms.h"
 #include <iostream>
 
+BMW::Cycles::Cycles() = default;
+BMW::Cycles::Cycles(std::size_t input)
+{
+	Set(input);
+}
+void BMW::Cycles::Set(std::size_t input)
+{
+	cycles_ = std::clamp(input, lower_bound_, upper_bound_);
+}
+
+std::size_t BMW::Cycles::Get() const { return cycles_; }
+
 BMW::Frequency::Frequency() = default;
 BMW::Frequency::Frequency(dataType input)
 {

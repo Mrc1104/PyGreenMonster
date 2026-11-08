@@ -9,6 +9,21 @@ namespace BMW
 		Ramp
 	};
 
+	class Cycles
+	{
+	public:
+		Cycles();
+		Cycles(std::size_t input);
+		void Set(std::size_t input);
+		std::size_t Get() const;
+		// Finite: [1,510]
+		// Infinite: 511
+		static constexpr std::size_t lower_bound_{1};
+		static constexpr std::size_t upper_bound_{511};
+	private:
+		std::size_t cycles_{lower_bound_};
+	};
+
 	class Frequency
 	{
 	public:
@@ -19,9 +34,9 @@ namespace BMW
 		explicit Frequency(dataType input);
 		void Set(dataType input);
 		dataType Get() const;
-	private:
 		static constexpr dataType lower_bound_{10};
 		static constexpr dataType upper_bound_{250};
+	private:
 		dataType value_{lower_bound_}; // Units: [Hz]
 	};
 
@@ -65,6 +80,8 @@ namespace BMW
 		explicit WaveAmplitude(dataType input);
 		void Set(dataType input) override;
 		dataType Get() const override;
+		static constexpr double lower_bound_ = Bounds::lower_bound_;
+		static constexpr double upper_bound_ = Bounds::upper_bound_;
 	private:
 		dataType value_{Bounds::lower_bound_};
 	};
