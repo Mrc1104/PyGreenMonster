@@ -31,6 +31,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	RemexClient
 	EPICS::Com
 	EPICS::ca
+	QwEPICS
 )
 
 target_sources(${PROJECT_NAME}
