@@ -12,70 +12,42 @@ class ThQueue
 {
 private:
 	mutable std::mutex mut;
-	std::queue<T> data_queue;
+	std::queue<T*> data_queue;
 	std::condition_variable data_cond;
 public:
-	void push(T value);
-	void wait_and_pop(T& value);
-	std::shared_ptr<T> wait_and_pop();
-	bool try_pop(T& value);
-	std::shared_ptr<T> try_pop();
+	~ThQueue();
+	void push(T* value);
+	T* wait_and_pop();
+	T* try_pop();
 	bool empty() const;
 };
 
 template<typename T>
-void ThQueue<T>::push(T value)
+void ThQueue<T>::push(T* value)
 {
 	std::lock_guard lk(mut);
-	data_queue.push(std::move(value));
+	data_queue.push(value);
 	data_cond.notify_one();
 }
 
 template<typename T>
-void ThQueue<T>::wait_and_pop(T& value)
+T* ThQueue<T>::wait_and_pop()
 {
 	std::unique_lock lk(mut);
 	data_cond.wait(lk, [this]{ return !data_queue.empty(); });
-	value = std::move(data_queue.front());
+	auto res = data_queue.front();
 	data_queue.pop();
+	return res;
 }
 
 template<typename T>
-std::shared_ptr<T> ThQueue<T>::wait_and_pop()
-{
-	std::unique_lock lk(mut);
-	data_cond.wait(lk, [this]{ return !data_queue.empty(); });
-	try {
-		auto res = std::make_shared<T>(std::move(data_queue.front()));
-		data_queue.pop();
-		return res;
-	} catch(...) {
-		data_cond.notify_one();
-	}
-}
-
-template<typename T>
-bool ThQueue<T>::try_pop(T& value)
+T* ThQueue<T>::try_pop()
 {
 	std::lock_guard lk(mut);
-	if(data_queue.empty()) return false;
-	value = std::move(data_queue.front());
+	if(data_queue.empty()) return nullptr;
+	auto res = data_queue.front();
 	data_queue.pop();
-	return true;
-}
-
-template<typename T>
-std::shared_ptr<T> ThQueue<T>::try_pop()
-{
-	std::lock_guard lk(mut);
-	if(data_queue.empty()) return std::shared_ptr<T>();
-	try {
-		auto res = std::make_shared<T>(std::move(data_queue.front()));
-		data_queue.pop();
-		return res;
-	} catch(...) {
-		return std::shared_ptr<T>();
-	}
+	return res;
 }
 
 template<typename T>
@@ -85,3 +57,15 @@ bool ThQueue<T>::empty() const
 	return data_queue.empty();
 
 }
+
+template<typename T>
+ThQueue<T>::~ThQueue()
+{
+	std::lock_guard lk(mut);
+	while(!data_queue.empty()) {
+		auto res = data_queue.front();
+		delete res;
+		data_queue.pop();
+	}
+}
+

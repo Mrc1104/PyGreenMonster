@@ -6,12 +6,12 @@
 int main()
 {
 	ThQueue<int> queue;
-	for(int i = 0; i < 5; i++) queue.push(i*i);
-	int val = 0;
+	for(int i = 0; i < 5; i++) queue.push(new int(i*i));
 	do {
 		std::cout << "Press 'q' to quit\n";
-		if(queue.try_pop(val)) {
-			std::cout << "Received value: " << val << '\n';
+		if(int* p = queue.try_pop()) {
+			std::cout << "Received value: " << *p << '\n';
+			delete p;
 		} else {
 			std::cout << "No value available...\n";
 		}
@@ -19,9 +19,10 @@ int main()
 	Receiver<int> rec;
 	Sender<int> send(rec);
 
-	send.send(5);
-	if(auto sptr = rec.try_pop()) {
-		std::cout << "Receiver received: " << *sptr << '\n';
+	send.send(new int(5));
+	if(auto ptr = rec.try_pop()) {
+		std::cout << "Receiver received: " << *ptr << '\n';
+		delete ptr;
 	}
 	
 	return 0;
