@@ -30,8 +30,8 @@ namespace BMW {
 	struct SineBounds
 	{
 		// Units [Amps]
-		static constexpr double lower_bound_ = -0.300;
-		static constexpr double upper_bound_ = +0.300;
+		static constexpr double lower_bound_ = -0.500;
+		static constexpr double upper_bound_ = +0.500;
 	};
 	struct RFVernierBounds
 	{
