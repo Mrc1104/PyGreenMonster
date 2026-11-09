@@ -91,7 +91,7 @@ namespace BMW
 		try {
 			fut.get();
 		} catch(std::runtime_error const& e) {
-			std::cerr << "Error Setting Cycles: " << e.what() << '\n';
+			std::cerr << "Error Waveform Type: " << e.what() << '\n';
 			return false;
 		}
 		// TODO: Send to Remex
@@ -109,7 +109,7 @@ namespace BMW
 		try {
 			fut.get();
 		} catch(std::runtime_error const& e) {
-			std::cerr << "Error Setting Cycles: " << e.what() << '\n';
+			std::cerr << "Error Waveform Type: " << e.what() << '\n';
 			return false;
 		}
 		// TODO: Send to Remex

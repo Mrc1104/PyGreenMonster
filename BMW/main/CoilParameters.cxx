@@ -3,6 +3,7 @@
 #include "MetaData.h"
 #include "Amplitude.h"
 #include "Frequency.h"
+#include "Waveforms.h"
 #include <string>
 #include <iostream>
 #include <thread>
@@ -77,5 +78,22 @@ int main()
 		std::cout << "Set Ampl failed\n";
 	} 
 
+	std::cout << '\n';
+	Waveform waveform(coil);
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::cout << "\nTrying to set sinewave\n";
+	std::cout << "=================================\n";
+	if(waveform.SetAndBroadcast(WaveformType::Sine)) {
+		std::cout << "Set Ampl succeeded\n";
+	} else {
+		std::cout << "Set Ampl failed\n";
+	} 
 
+	std::cout << "\nTrying to set rampwave\n";
+	std::cout << "=================================\n";
+	if(waveform.SetAndBroadcast(WaveformType::Ramp)) {
+		std::cout << "Set Ampl succeeded\n";
+	} else {
+		std::cout << "Set Ampl failed\n";
+	} 
 }
