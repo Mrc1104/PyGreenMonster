@@ -18,7 +18,7 @@ namespace BMW
 
 		bool isEnergyModulator() const;
 	public:
-		Coil(Meta const& meta, Sender<Message> sender);
+		Coil(Meta const& meta);
 		void SetAmplitude(double const input);
 		void SetWave(WaveformType const input);
 		void SetFrequency(double const input);
@@ -26,3 +26,21 @@ namespace BMW
 	};
 
 };
+/*
+extern "C"
+{
+	typedef void* BMWCoil;
+	BMWCoil* CreateListOfHallACoils(std::size_t* items);
+	DestroyListOfCoil(BMWCoil* coils);
+	std::size_t GetCoilMemSize();
+	void AttachBMWReceiver(BMWCoil coil, BMWReceiver receiver);
+	void SetBMWAmplitude(BMWCoil coil, double input);
+	void SetBMWAmplitude(BMWCoil coil, double const input);
+	void SetBMWWave(BMWCoil coil, WaveformType const input);
+	void SetBMWFrequency(BMWCoil coil, double const input);
+	void SetBMWCycles(BMWCoil coil, std::size_t const input);
+
+	void GetCoilName(BMWCoil coil);
+	void GetCoilId(BMWCoil coil);
+};
+*/

@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <string_view>
 #include <array>
 #include <ranges>
 #include <iostream>
@@ -13,21 +11,19 @@ enum class TrimChan { CHAN0, CHAN1, CHAN2, CHAN3 };
 enum class EPIVS_PV { WAVESTATE, FREQUENCY, AMPLITUDE, SINEWAVE, RAMPWAVE, RCRINPUT, TRIGSTATEBTN, TRIGBTN, STOPBTN };
 enum class Modtype { Coil, Energy, Empty };
 struct Name {
-	std::string_view name_;
-	constexpr explicit Name(std::string_view name) : name_(name) {}
-	std::string_view Get() const { return name_; }
+	const char* name_;
+	explicit consteval Name(const char* name) : name_(name) {}
+	const char* Get() const { return name_; }
 };
 struct Descr {
-	std::string_view descr_;
-	constexpr explicit Descr(std::string_view descr) : descr_(descr) {}
-	operator std::string_view() const { return descr_; }
-	std::string_view Get() const { return descr_; }
+	const char* descr_;
+	explicit consteval Descr(const char* descr) : descr_(descr) {}
+	const char* Get() const { return descr_; }
 };
 struct ID {
-	std::size_t id_;
-	constexpr explicit ID(std::size_t id) : id_{id} {}
-	operator std::size_t() const { return id_; }
-	std::size_t Get() const { return id_; }
+	int id_;
+	constexpr explicit ID(int id) : id_{id} {}
+	int Get() const { return id_; }
 };
 struct Meta
 {

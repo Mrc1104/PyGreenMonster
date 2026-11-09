@@ -15,10 +15,22 @@ extern "C" {
 	struct BMWMessage
 	{
 		int id;
-		MesageType type;
+		BMWMesageType type;
 		void* data;
 	};
 
 	typedef void* BMWReceiver;
 };
+/*
+namespace BWM
+{
+	class Messenger
+	{
+		Receiver<BMWMessage> receiver_;
+	public:
+		template<
+		SendMessage(int id, BMWMesageType, 
+		BMWMessage ReadMessage
+	};
 
+};*/

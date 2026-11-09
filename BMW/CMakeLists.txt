@@ -32,6 +32,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	EPICS::Com
 	EPICS::ca
 	QwEPICS
+	ThQueue
 )
 
 target_sources(${PROJECT_NAME}

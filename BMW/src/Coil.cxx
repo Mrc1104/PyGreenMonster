@@ -44,3 +44,68 @@ void Coil::SetCycles(std::size_t const input)
 {
 	cycles_.Set(input);
 }
+
+
+
+/////////////////////////////////////////////////
+//// EXTERN C API
+/////////////////////////////////////////////////
+/*
+BMWCoil CreateListOfHallACoils(std::size_t* items)
+{
+	// Loop once to get the size
+	std::size_t counter{0};
+	counter = 0;
+	for(auto& data : meta.Get([](BMW::Meta const& meta) { return meta.hall_ == BMW::Hall::A; })) {
+		if( Modtype::Empty == data.mod_ ) continue;
+		counter++;
+	}
+	*items = counter;
+	if(counter == 0) return nullptr;
+
+	Coil* coils = new Coil[counter];
+	counter = 0;
+
+	// Loop twice to fill
+	for(auto& data : meta.Get([](BMW::Meta const& meta) { return meta.hall_ == BMW::Hall::A; })) {
+		if( Modtype::Empty == data.mod_ ) continue;
+		coils[counter++] = new Coil(data);	
+	}
+	return static_cast<BMWCoil>( coils );
+}
+DestroyCoil(BMWCoil* coil, std::size_t items)
+{
+	if(coil == nullptr) return;
+	auto ptr = static_cast<Coil*>(coil);
+	delete[] ptr;
+}
+
+std::size_t GetCoilMemSize() { return sizeof(Coil); }
+
+void AttachReceiver(BMWCoil coil, BMWReceiver receiver)
+{
+	auto ptr = static_cast<Coil*>(coil);
+	auto rec = static_cast<Receiver<BMWMessage>*>(receiver);
+	ptr->AttachReceiver(rec)
+}
+void SetBMWAmplitude(BMWCoil coil, double input)
+{
+	auto ptr = static_cast<Coil*>(coil);
+	ptr->SetAmplitude(input);
+}
+void SetBMWWave(BMWCoil coil, WaveformType const input)
+{
+	auto ptr = static_cast<Coil*>(coil);
+	ptr->SetWave(input);
+}
+void SetBMWFrequency(BMWCoil coil, double const input)
+{
+	auto ptr = static_cast<Coil*>(coil);
+	ptr->SetFrequency(input);
+}
+void SetBMWCycles(BMWCoil coil, std::size_t const input)
+{
+	auto ptr = static_cast<Coil*>(coil);
+	ptr->SetCycles(input);
+}
+*/
