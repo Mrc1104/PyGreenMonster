@@ -49,3 +49,16 @@ void Frequency::Attach(std::string_view pv)
 	std::string null_term_string = std::string(pv) + suffix;
 	channel_ = EpicHandler::Instance().ConnectChannel(null_term_string.c_str());
 }
+
+std::optional<int> Frequency::GetRemote() const
+{
+	if(!channel_) return std::nullopt;
+	try {
+		auto fut = channel_->GetAsync<int>();
+		return std::optional<int>{fut.get()};
+	} catch(std::runtime_error const& e) {
+		std::cerr << "Error Setting Cycles: " << e.what() << '\n';
+		return std::nullopt;
+	}
+}
+

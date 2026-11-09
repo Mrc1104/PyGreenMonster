@@ -2,6 +2,7 @@
 
 #include "QwEpicChannel.h"
 #include <string_view>
+#include <optional>
 namespace BMW {
 	class Frequency
 	{
@@ -19,6 +20,7 @@ namespace BMW {
 		bool SetAndBroadcast(dataType input);
 		bool Broadcast();
 		dataType Get() const;
+		std::optional<int> GetRemote() const;
 	private:
 		dataType value_{lower_bound_}; // Units: [Hz]
 		EpicChannel* channel_{nullptr};

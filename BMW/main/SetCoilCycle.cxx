@@ -10,7 +10,7 @@
 #include <chrono>
 
 const char* MASTER_SWITCH = "BEAMMODSWITCH";
-constexpr unsigned conn_wait = 5000;
+constexpr unsigned conn_wait = 500;
 
 using namespace BMW;
 
@@ -20,7 +20,7 @@ void usage(char const* exe)
 
 	MetaData meta;
 
-	std::cout << "Usage:\n" << exe << " <Coil> <Cycles>";
+	std::cout << "Usage:\n" << exe << " <Coil> <Cycles>\n";
 	std::cout << "Example: ./build/BMW/setcoilcycle MHF1C08H 5\n";
 	std::cout << "\n[coils:";
 	for(auto& data : meta.Get([](BMW::Meta const& meta) { return meta.hall_ == BMW::Hall::A; })) {
