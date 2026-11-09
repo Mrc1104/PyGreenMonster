@@ -13,19 +13,19 @@ namespace BMW
 	class Coil
 	{
 		State state_{};
-		WaveformType wave_type_{WaveformType::Sine};
-		Ampl ampl_{SineAmplitude{}};
-		Cycles cycles_;
+		Waveform wave_{};
+		Ampl ampl_{};
+		Cycles cycles_{};
 		Frequency freq_{};
 		Meta const& meta_;
 
 		bool isEnergyModulator() const;
 	public:
 		Coil(Meta const& meta);
-		void SetAmplitude(double const input);
-		void SetWave(WaveformType const input);
-		void SetFrequency(double const input);
-		void SetCycles(std::size_t const input);
+		bool SetAmplitude(double const input);
+		bool SetWave(WaveformType const input);
+		bool SetFrequency(double const input);
+		bool SetCycles(std::size_t const input);
 	};
 
 };

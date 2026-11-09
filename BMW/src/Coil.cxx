@@ -5,12 +5,15 @@ using namespace BMW;
 Coil::Coil(Meta const& meta)
 : meta_(meta)
 {
-	auto coil_name = meta_.name_.Get();
-	state_.Attach(coil_name);
-	cycles_.Attach(coil_name);
+	auto pv = meta_.GetPV();
+	state_.Attach(pv);
+	wave_.Attach(pv);
+	ampl_.Attach(pv);
+	cycles_.Attach(pv);
+	freq_.Attach(pv);
 	if(isEnergyModulator()) {
 		ampl_ = RFVernierAmplitude();
-		wave_type_ = WaveformType::Sine;
+		wave_.Set( WaveformType::Sine );
 	}
 }
 
@@ -19,35 +22,32 @@ bool Coil::isEnergyModulator() const
 	return meta_.mod_ == Modtype::Energy;
 }
 
-void Coil::SetAmplitude(double const input)
+bool Coil::SetAmplitude(double const input)
 {
-	ampl_.Set(input);
+	return ampl_.SetAndBroadcast(input);
 }
 
-void Coil::SetWave(WaveformType const input)
+bool Coil::SetWave(WaveformType const input)
 {
-	if(wave_type_ == input) return;
-	if(isEnergyModulator()) return; // Energy mod is always sinusoidal
-
-	wave_type_ = input; // TODO: Make wave_type_ a struct with a set operation
-	auto amp = ampl_.Get();
-	if(wave_type_ == WaveformType::Sine)
-		ampl_ = SineAmplitude(amp);
-	else 
-		ampl_ = RampAmplitude(amp);
+	// Energy Amp is indifferent to wave type
+	if(!isEnergyModulator() && input != wave_.Get()) {
+		auto amp = ampl_.Get();
+		if(input == WaveformType::Sine) ampl_ = SineAmplitude();
+		else ampl_ = RampAmplitude();
+		return wave_.SetAndBroadcast(input) and ampl_.SetAndBroadcast(amp);
+	}
+	return wave_.SetAndBroadcast(input);
 }
 
-void Coil::SetFrequency(double const input)
+bool Coil::SetFrequency(double const input)
 {
-	freq_.Set(input);
+	return freq_.SetAndBroadcast(input);
 }
 
-void Coil::SetCycles(std::size_t const input)
+bool Coil::SetCycles(std::size_t const input)
 {
-	cycles_.Set(input);
+	return cycles_.SetAndBroadcast(input);
 }
-
-
 
 /////////////////////////////////////////////////
 //// EXTERN C API
