@@ -31,7 +31,7 @@ bool Frequency::Broadcast()
 	try {
 		fut.get();
 	} catch(std::runtime_error const& e) {
-		std::cerr << "Error Setting Cycles: " << e.what() << '\n';
+		std::cerr << "Error Setting Frequency: " << e.what() << '\n';
 		return false;
 	}
 	// TODO: Send to Remex
