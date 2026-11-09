@@ -50,3 +50,7 @@ bool Ampl::SetAndBroadcast(dataType input)
 	return ptr_->Broadcast();
 }
 
+std::optional<Ampl::dataType> Ampl::GetRemote() const
+{
+	return ptr_->GetRemote();	
+}

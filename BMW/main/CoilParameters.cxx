@@ -33,7 +33,7 @@ int main()
 	} else {
 		std::cout << "Set Cycles failed\n";
 	} 
-
+/*
 	std::cout << '\n';
 	Frequency freq(coil);
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -96,4 +96,6 @@ int main()
 	} else {
 		std::cout << "Set Ampl failed\n";
 	} 
+	*/
+	return 0;
 }

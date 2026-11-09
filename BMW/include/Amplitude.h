@@ -4,6 +4,7 @@
 #include "QwEpicHandler.h"
 #include <string_view>
 #include <iostream>
+#include <optional>
 
 namespace BMW {
 	class Amplitude
@@ -18,6 +19,7 @@ namespace BMW {
 		virtual dataType Get() const = 0;
 		virtual bool Broadcast() = 0;
 		virtual bool SetAndBroadcast(dataType input) = 0;
+		virtual std::optional<dataType> GetRemote() const = 0;
 
 	};
 
@@ -57,6 +59,7 @@ namespace BMW {
 		bool Broadcast() override;
 		bool SetAndBroadcast(dataType input) override;
 		dataType Get() const override;
+		std::optional<dataType> GetRemote() const override;
 	private:
 		dataType value_{Bounds::lower_bound_};
 		EpicChannel* channel_{nullptr};
@@ -81,6 +84,7 @@ namespace BMW {
 		dataType Get() const override;
 		bool Broadcast() override;
 		bool SetAndBroadcast(dataType input) override;
+		std::optional<dataType> GetRemote() const override;
 	};
 
 	template<typename Bounds>
@@ -143,6 +147,20 @@ namespace BMW {
 
 	template<typename Bounds>
 	typename WaveAmplitude<Bounds>::dataType WaveAmplitude<Bounds>::Get() const { return value_; }
+
+	template<typename Bounds>
+	std::optional<typename WaveAmplitude<Bounds>::dataType> WaveAmplitude<Bounds>::GetRemote() const
+	{
+		if(!channel_) return std::nullopt;
+		try {
+			auto fut = channel_->GetAsync<int>();
+			return std::optional<int>{fut.get()};
+		} catch(std::runtime_error const& e) {
+			std::cerr << "Error Setting Cycles: " << e.what() << '\n';
+			return std::nullopt;
+		}
+	}
+
 
 	template<typename T>
 	Ampl::Ampl(T&& ampl) : ptr_(std::make_unique<std::decay_t<T>>(std::forward<T>(ampl))) { }
