@@ -1,14 +1,24 @@
 #pragma once
 #include "Waveforms.h"
+#include "QwEpicChannel.h"
+#include "QwEpicHandler.h"
+#include <string_view>
+#include <iostream>
+
 namespace BMW {
 	class Amplitude
 	{
 	public:
+		static constexpr std::string_view EPIC_PV_SUFFIX{":AMPLITUDE"};
 		using dataType = double;
 		virtual ~Amplitude() = default;
 		virtual std::unique_ptr<Amplitude> Clone() const = 0;
+		virtual void Attach(std::string_view pv) = 0;
 		virtual void Set(dataType input) = 0;
 		virtual dataType Get() const = 0;
+		virtual bool Broadcast() = 0;
+		virtual bool SetAndBroadcast(dataType input) = 0;
+
 	};
 
 	struct RampBounds
@@ -36,15 +46,20 @@ namespace BMW {
 	{
 	public:
 		using dataType = Amplitude::dataType;
+		static constexpr dataType lower_bound_ = Bounds::lower_bound_;
+		static constexpr dataType upper_bound_ = Bounds::upper_bound_;
 		WaveAmplitude() = default;
 		std::unique_ptr<Amplitude> Clone() const override;
 		explicit WaveAmplitude(dataType input);
+		WaveAmplitude(std::string_view pv, dataType input = lower_bound_);
+		void Attach(std::string_view pv) override;
 		void Set(dataType input) override;
+		bool Broadcast() override;
+		bool SetAndBroadcast(dataType input) override;
 		dataType Get() const override;
-		static constexpr double lower_bound_ = Bounds::lower_bound_;
-		static constexpr double upper_bound_ = Bounds::upper_bound_;
 	private:
 		dataType value_{Bounds::lower_bound_};
+		EpicChannel* channel_{nullptr};
 	};
 	class Ampl : public Amplitude
 	{
@@ -53,42 +68,88 @@ namespace BMW {
 	public:
 		using dataType = Amplitude::dataType;
 		Ampl();
+		Ampl(dataType input);
+		Ampl(std::string_view pv, dataType input = dataType{});
 		template<typename T> Ampl(T&& ampl);
 		std::unique_ptr<Amplitude> Clone() const;
 		Ampl(Ampl const& other);
 		Ampl& operator=(Ampl const& other);
 		Ampl(Ampl && other) noexcept = default;
 		Ampl& operator=(Ampl && other) noexcept = default;
+		void Attach(std::string_view pv) override;
 		void Set(dataType input) override;
 		dataType Get() const override;
+		bool Broadcast() override;
+		bool SetAndBroadcast(dataType input) override;
 	};
 
 	template<typename Bounds>
-	std::unique_ptr<BMW::Amplitude> BMW::WaveAmplitude<Bounds>::Clone() const
+	std::unique_ptr<Amplitude> WaveAmplitude<Bounds>::Clone() const
 	{
 		return std::make_unique<WaveAmplitude<Bounds>>( *this );
 	}
 	
 	template<typename Bounds>
-	BMW::WaveAmplitude<Bounds>::WaveAmplitude(dataType input)
+	WaveAmplitude<Bounds>::WaveAmplitude(dataType input)
 	{
 		Set(input);
 	}
+	template<typename Bounds>
+	WaveAmplitude<Bounds>::WaveAmplitude(std::string_view pv, dataType input)
+	{
+		Set(input);
+		Attach(pv);
+	}
+
+	template<typename Bounds>
+	void WaveAmplitude<Bounds>::Attach(std::string_view pv)
+	{
+		std::string suffix{};
+		if(pv.find(EPIC_PV_SUFFIX) == std::string_view::npos) {
+			suffix = std::string(EPIC_PV_SUFFIX);
+		}
+		std::string null_term_string = std::string(pv) + suffix;
+		channel_ = EpicHandler::Instance().ConnectChannel(null_term_string.c_str());
+	}
 	
 	template<typename Bounds>
-	void BMW::WaveAmplitude<Bounds>::Set(dataType input)
+	void WaveAmplitude<Bounds>::Set(dataType input)
 	{
 		value_ = std::clamp(input, Bounds::lower_bound_, Bounds::upper_bound_);
 	}
+	
 	template<typename Bounds>
-	typename BMW::WaveAmplitude<Bounds>::dataType BMW::WaveAmplitude<Bounds>::Get() const { return value_; }
+	bool WaveAmplitude<Bounds>::Broadcast()
+	{
+		if(!channel_) {
+			return false;
+		}
+		auto fut = channel_->PutAsync(value_);
+		try {
+			fut.get();
+		} catch(std::runtime_error const& e) {
+			std::cerr << "Error Setting Amplitude: " << e.what() << '\n';
+			return false;
+		}
+		// TODO: Send to Remex
+		return true;
+	}
+	template<typename Bounds>
+	bool WaveAmplitude<Bounds>::SetAndBroadcast(dataType input)
+	{
+		Set(input);
+		return Broadcast();
+	}
+
+	template<typename Bounds>
+	typename WaveAmplitude<Bounds>::dataType WaveAmplitude<Bounds>::Get() const { return value_; }
 
 	template<typename T>
-	BMW::Ampl::Ampl(T&& ampl) : ptr_(std::make_unique<std::decay_t<T>>(std::forward<T>(ampl))) { }
+	Ampl::Ampl(T&& ampl) : ptr_(std::make_unique<std::decay_t<T>>(std::forward<T>(ampl))) { }
 
 
-	using RampAmplitude = BMW::WaveAmplitude<BMW::RampBounds>;
-	using SineAmplitude = BMW::WaveAmplitude<BMW::SineBounds>;
-	using RFVernierAmplitude = BMW::WaveAmplitude<BMW::RFVernierBounds>;
+	using RampAmplitude = WaveAmplitude<RampBounds>;
+	using SineAmplitude = WaveAmplitude<SineBounds>;
+	using RFVernierAmplitude = WaveAmplitude<RFVernierBounds>;
 }; // namespace BMW
 

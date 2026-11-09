@@ -1,6 +1,7 @@
 #include "Status.h"
 #include "Cycles.h"
 #include "MetaData.h"
+#include "Amplitude.h"
 #include "Frequency.h"
 #include <string>
 #include <iostream>
@@ -42,5 +43,39 @@ int main()
 	} else {
 		std::cout << "Set Freq failed\n";
 	} 
+	
+	std::cout << '\n';
+	Ampl ampl{RampAmplitude(coil)};
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::cout << "\nTrying to Set Ramp Amplitude\n";
+	std::cout << "=================================\n";
+	if(freq.SetAndBroadcast(250)) {
+		std::cout << "Set Ampl succeeded\n";
+	} else {
+		std::cout << "Set Ampl failed\n";
+	} 
+
+	std::cout << '\n';
+	ampl = SineAmplitude(coil);
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::cout << "\nTrying to Set Sine Amplitude\n";
+	std::cout << "=================================\n";
+	if(freq.SetAndBroadcast(250)) {
+		std::cout << "Set Ampl succeeded\n";
+	} else {
+		std::cout << "Set Ampl failed\n";
+	} 
+
+	std::cout << '\n';
+	ampl = RFVernierAmplitude(coil);
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::cout << "\nTrying to Set RF Amplitude\n";
+	std::cout << "=================================\n";
+	if(freq.SetAndBroadcast(250)) {
+		std::cout << "Set Ampl succeeded\n";
+	} else {
+		std::cout << "Set Ampl failed\n";
+	} 
+
 
 }
