@@ -1,6 +1,7 @@
 #include "Status.h"
 #include "Cycles.h"
 #include "MetaData.h"
+#include "Frequency.h"
 #include <string>
 #include <iostream>
 #include <thread>
@@ -30,4 +31,16 @@ int main()
 	} else {
 		std::cout << "Set Cycles failed\n";
 	} 
+
+	std::cout << '\n';
+	Frequency freq(coil);
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::cout << "\nTrying to Set Frequency\n";
+	std::cout << "=================================\n";
+	if(freq.SetAndBroadcast(250)) {
+		std::cout << "Set Freq succeeded\n";
+	} else {
+		std::cout << "Set Freq failed\n";
+	} 
+
 }
