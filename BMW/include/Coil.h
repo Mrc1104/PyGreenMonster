@@ -1,6 +1,7 @@
 #pragma once
 #include "MetaData.h"
 #include "Waveforms.h"
+#include "Cycles.h"
 #include "Status.h"
 #include "Message.h"
 #include "Sender.h"
@@ -12,7 +13,7 @@ namespace BMW
 		State state_{};
 		WaveformType wave_type_{WaveformType::Sine};
 		Ampl ampl_{SineAmplitude{}};
-		Cycles cycles_{};
+		Cycles cycles_;
 		Frequency freq_{};
 		Meta const& meta_;
 

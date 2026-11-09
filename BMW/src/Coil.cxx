@@ -5,7 +5,9 @@ using namespace BMW;
 Coil::Coil(Meta const& meta)
 : meta_(meta)
 {
-	state_.Attach(meta_.name_.Get());
+	auto coil_name = meta_.name_.Get();
+	state_.Attach(coil_name);
+	cycles_.Attach(coil_name);
 	if(isEnergyModulator()) {
 		ampl_ = RFVernierAmplitude();
 		wave_type_ = WaveformType::Sine;
