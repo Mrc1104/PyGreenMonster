@@ -1,5 +1,6 @@
 #include "Cycles.h"
 #include "QwEpicHandler.h"
+#include <algorithm>
 using namespace BMW;
 
 
@@ -21,9 +22,13 @@ void Cycles::Attach(std::string_view pv)
 	channel_ = EpicHandler::Instance().ConnectChannel(null_term_string.c_str());
 }
 
-bool Cycles::Set(int input)
+void Cycles::Set(int input)
 {
 	cycles_ = std::clamp(input, lower_bound_, upper_bound_);
+}
+
+bool Cycles::Broadcast()
+{
 	if(!channel_) {
 		return false;
 	}
@@ -36,6 +41,12 @@ bool Cycles::Set(int input)
 	}
 	// TODO: Send to Remex
 	return true;
+}
+
+bool Cycles::SetAndBroadcast(int input)
+{
+	Set(input);
+	return Broadcast();
 }
 
 int Cycles::Get() const { return cycles_; }

@@ -26,7 +26,7 @@ int main()
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	std::cout << "\nTrying to Set NCycles\n";
 	std::cout << "=================================\n";
-	if(cycle.Set(50)) {
+	if(cycle.SetAndBroadcast(50)) {
 		std::cout << "Set Cycles succeeded\n";
 	} else {
 		std::cout << "Set Cycles failed\n";

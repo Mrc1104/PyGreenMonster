@@ -14,7 +14,9 @@ namespace BMW
 		explicit Cycles(int input = lower_bound_);
 		Cycles(std::string_view pv, int input = lower_bound_);
 		void Attach(std::string_view pv);
-		bool Set(int input);
+		void Set(int input);
+		bool Broadcast();
+		bool SetAndBroadcast(int input);
 		int Get() const;
 	private:
 		int cycles_{lower_bound_};
