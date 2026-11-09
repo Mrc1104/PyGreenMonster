@@ -3,6 +3,7 @@
 #include "QwAtomicEpicTypes.h"
 #include "QwObserver.h"
 #include <string_view>
+#include <string>
 namespace BMW
 {
 	enum class Status : int
@@ -14,6 +15,7 @@ namespace BMW
 		Unknown
 	};
 	Status convertToStatus(int input);
+	std::string stringify(Status status);
 
 	class State : public EPICSObserver<int>
 	{
@@ -27,7 +29,9 @@ namespace BMW
 		State(State const& other);
 		void Attach(std::string_view pv);
 		Status GetStatus() const;
+		bool GetConnStatus() const;
 
+		// No-op
 		void Update(int const& data) override;
 
 	};

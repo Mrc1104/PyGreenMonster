@@ -17,6 +17,18 @@ Status BMW::convertToStatus(int input)
 	return state;
 }
 
+std::string BMW::stringify(Status status)
+{
+	std::string str;
+	switch(status) {
+		case Status::Off:     str = "Off";    break;
+		case Status::Config:  str = "Config"; break;
+		case Status::Trigger: str = "Trigger";break;
+		case Status::Test:    str = "Test";   break;
+		case Status::Unknown: str = "Unknown";break;
+	}
+	return str;
+}
 
 State::State(std::string_view pv)
 {
@@ -49,9 +61,8 @@ void State::Attach(std::string_view pv)
 
 
 Status State::GetStatus() const { return convertToStatus(status_.Load()); }
+bool State::GetConnStatus() const { return channel_->isConnected(); }
+// Not implemented yet. Leave as a No-op
+// Instead, callers should poll GetConnStatus() or GetStatus()
+void State::Update(int const& data) { return; }
 
-void State::Update(int const& data)
-{
-	status_.Store(data);
-	// Notify
-}
