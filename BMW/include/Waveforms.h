@@ -9,21 +9,6 @@ namespace BMW
 		Ramp
 	};
 
-	class Cycles
-	{
-	public:
-		Cycles();
-		Cycles(std::size_t input);
-		void Set(std::size_t input);
-		std::size_t Get() const;
-		// Finite: [1,510]
-		// Infinite: 511
-		static constexpr std::size_t lower_bound_{1};
-		static constexpr std::size_t upper_bound_{511};
-	private:
-		std::size_t cycles_{lower_bound_};
-	};
-
 	class Frequency
 	{
 	public:
