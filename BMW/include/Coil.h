@@ -3,6 +3,7 @@
 #include "Waveforms.h"
 #include "Cycles.h"
 #include "Status.h"
+#include "Frequency.h"
 #include "Message.h"
 #include "Sender.h"
 
