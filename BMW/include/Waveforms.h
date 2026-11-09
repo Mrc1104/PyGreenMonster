@@ -3,14 +3,14 @@
 #include "QwEpicHandler.h"
 #include "QwEpicChannel.h"
 
+enum WaveformType
+{
+	Sine,
+	Ramp
+};
+
 namespace BMW
 {
-	enum class WaveformType
-	{
-		Sine,
-		Ramp
-	};
-
 	template<WaveformType WaveType>
 	struct WaveformTypeTraits;
 

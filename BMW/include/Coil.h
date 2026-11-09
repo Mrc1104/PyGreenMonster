@@ -5,8 +5,6 @@
 #include "Status.h"
 #include "Frequency.h"
 #include "Amplitude.h"
-#include "Message.h"
-#include "Sender.h"
 
 namespace BMW
 {
@@ -21,12 +19,17 @@ namespace BMW
 
 		bool isEnergyModulator() const;
 	public:
-		Coil(Meta const& meta);
+		Coil(Meta meta);
+		Coil(Coil const&) = default;
+		Coil& operator=(Coil const&) = default;
+		~Coil();
 		bool SetAmplitude(double const input);
 		bool SetWave(WaveformType const input);
 		bool SetFrequency(double const input);
 		bool SetCycles(std::size_t const input);
 
+		const char* GetName() const;
+		int GetID() const;
 		Status GetStatus() const;
 	};
 

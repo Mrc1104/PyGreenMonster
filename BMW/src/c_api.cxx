@@ -1,69 +1,95 @@
 #include "c_api.h"
+#include "Coil.h"
+#include "MetaData.h"
+#include <new>
+#include <cstdlib>
 
 BMWCoil CreateListOfHallACoils(std::size_t* items)
 {
+	using namespace BMW;
 	// Loop once to get the size
 	std::size_t counter{0};
 	counter = 0;
-	for(auto& data : meta.Get([](BMW::Meta const& meta) { return meta.hall_ == BMW::Hall::A; })) {
+	MetaData meta;
+	for(auto& data : meta.Get([](Meta const& meta) { return meta.hall_ == Hall::A; })) {
 		if( Modtype::Empty == data.mod_ ) continue;
 		counter++;
 	}
 	*items = counter;
 	if(counter == 0) return nullptr;
 
-	Coil* coils = new Coil[counter];
-	counter = 0;
-
-	// Loop twice to fill
-	for(auto& data : meta.Get([](BMW::Meta const& meta) { return meta.hall_ == BMW::Hall::A; })) {
-		if( Modtype::Empty == data.mod_ ) continue;
-		coils[counter++] = new Coil(data);	
+	void* buffer = std::malloc(counter * sizeof(Coil));
+	if(!buffer) {
+		*items = 0;
+		return nullptr;
 	}
-	return static_cast<BMWCoil>( coils );
+
+	counter = 0;
+	Coil* coil_array = static_cast<Coil*>( buffer );
+	// Loop twice to fill
+	for(auto& data : meta.Get([](Meta const& meta) { return meta.hall_ == Hall::A; })) {
+		if( Modtype::Empty == data.mod_ ) continue;
+		new (&coil_array[counter++]) Coil(data);
+	}
+	return static_cast<BMWCoil>( coil_array );
 }
-DestroyCoil(BMWCoil* coil, std::size_t items)
+void DestroyCoil(BMWCoil coil, std::size_t items)
 {
+	using namespace BMW;
 	if(coil == nullptr) return;
-	auto ptr = static_cast<Coil*>(coil);
-	delete[] ptr;
+	auto arr = static_cast<Coil*>(coil);
+	for( std::size_t i = 0; i < items; i++) {
+		arr[i].~Coil();
+	}
+	free( arr );
 }
 
-std::size_t GetCoilMemSize() { return sizeof(Coil); }
+std::size_t GetCoilMemSize()
+{ 
+	using namespace BMW;
+	return sizeof(Coil);
+}
 
 bool SetBMWAmplitude(BMWCoil coil, double input)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
 	return ptr->SetAmplitude(input);
 }
-return SetBMWWave(BMWCoil coil, WaveformType const input)
+bool SetBMWWave(BMWCoil coil, WaveformType const input)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
 	return ptr->SetWave(input);
 }
 bool SetBMWFrequency(BMWCoil coil, double const input)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
-	return->SetFrequency(input);
+	return ptr->SetFrequency(input);
 }
 bool SetBMWCycles(BMWCoil coil, int const input)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
 	return ptr->SetCycles(input);
 }
 
-const char( GetCoilName(BMWCoil coil)
+const char* GetCoilName(BMWCoil coil)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
-	return ptr->meta_.name_.Get();
+	return ptr->GetName();
 }
 int GetCoilId(BMWCoil coil)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
-	return ptr->meta_.id_.Get();
+	return ptr->GetID();
 }
 Status GetStatus(BMWCoil coil)
 {
+	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
 	return ptr->GetStatus();
 }

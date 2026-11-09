@@ -4,16 +4,16 @@
 #include "QwObserver.h"
 #include <string_view>
 #include <string>
+enum class Status : int
+{
+	Off = 0,
+	Config,
+	Trigger,
+	Test,
+	Unknown
+};
 namespace BMW
 {
-	enum class Status : int
-	{
-		Off = 0,
-		Config,
-		Trigger,
-		Test,
-		Unknown
-	};
 	Status convertToStatus(int input);
 	std::string stringify(Status status);
 

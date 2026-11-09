@@ -2,7 +2,7 @@
 
 using namespace BMW;
 
-Coil::Coil(Meta const& meta)
+Coil::Coil(Meta meta)
 : meta_(meta)
 {
 	auto pv = meta_.GetPV();
@@ -16,6 +16,8 @@ Coil::Coil(Meta const& meta)
 		wave_.Set( WaveformType::Sine );
 	}
 }
+// For placement new
+Coil::~Coil() = default;
 
 bool Coil::isEnergyModulator() const
 {
@@ -49,5 +51,8 @@ bool Coil::SetCycles(std::size_t const input)
 	return cycles_.SetAndBroadcast(input);
 }
 
-Status Coil::GetStatus() const { state_.Get(); }
+
+const char* Coil::GetName() const { return meta_.name_.Get(); }
+int Coil::GetID()           const { return meta_.id_.Get();   }
+Status Coil::GetStatus()    const { return state_.GetStatus();}
 
