@@ -93,6 +93,11 @@ public:
 	 *        for enumeration description
 	 */
 	::channel_state CheckConnection();
+	/**
+	 *@brief Get the value of the is_conn bool
+	 *@retval is_conn boolean value
+	 */
+	bool isConnected() const;
 
 	/**
 	 *@brief Monitor Callback function signature

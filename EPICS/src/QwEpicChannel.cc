@@ -75,6 +75,7 @@ EpicChannel::EpicChannel(EpicChannel && other) noexcept
 
 ::channel_state EpicChannel::CheckConnection() { return ::ca_state(chan); }
 std::string_view EpicChannel::GetName() { return ::ca_name(chan); }
+bool EpicChannel::isConnected() const { return is_conn.load(std::memory_order_relaxed); }
 
 
 [[nodiscard]]
