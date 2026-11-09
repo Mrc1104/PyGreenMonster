@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <ranges>
+#include <string>
 #include <iostream>
 using namespace std::string_view_literals;
 namespace BMW {
@@ -34,6 +35,8 @@ struct Meta
 	Hall hall_;
 	Modtype mod_;
 	Descr descr_;
+
+	std::string GetPV() const;
 };
 
 class MetaData
@@ -52,5 +55,7 @@ template<typename Predicate>
 	return meta_ | std::ranges::views::filter(std::forward<Predicate>(predicate));
 }
 
+std::string stringify(TrimCard card);
+std::string stringify(TrimChan chan);
 
 }; //namespace BMW

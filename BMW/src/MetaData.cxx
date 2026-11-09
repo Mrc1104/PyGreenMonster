@@ -20,3 +20,19 @@ const std::array<Meta, MetaData::N_CHANNELS> MetaData::meta_ = {
 	Meta{Name("SL20EMod"), ID(15), TrimCard::BMOD2, TrimChan::CHAN3, Hall::C, Modtype::Energy, Descr("Energy Modulation")   }
 };
 
+std::string Meta::GetPV() const
+{
+	std::string pv = stringify(card_) + ':' + stringify(chan_);
+	return pv;
+}
+std::string BMW::stringify(BMW::TrimCard card) { return (card == TrimCard::BMOD1) ? "BMOD1" : "BMOD2"; }
+std::string BMW::stringify(BMW::TrimChan chan) { 
+	std::string str;
+	switch(chan) {
+		case BMW::TrimChan::CHAN0: str = "CHAN0"; break;
+		case BMW::TrimChan::CHAN1: str = "CHAN1"; break;
+		case BMW::TrimChan::CHAN2: str = "CHAN2"; break;
+		case BMW::TrimChan::CHAN3: str = "CHAN3"; break;
+	};
+	return str;
+};
