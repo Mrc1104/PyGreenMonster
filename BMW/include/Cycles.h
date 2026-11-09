@@ -1,6 +1,7 @@
 #pragma once
 #include "QwEpicChannel.h"
 #include <string_view>
+#include <optional>
 namespace BMW
 {
 	class Cycles
@@ -17,7 +18,8 @@ namespace BMW
 		void Set(int input);
 		bool Broadcast();
 		bool SetAndBroadcast(int input);
-		int Get() const;
+		int  Get() const;
+		std::optional<int> GetRemote() const;
 	private:
 		int cycles_{lower_bound_};
 		EpicChannel* channel_{nullptr};

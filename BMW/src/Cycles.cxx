@@ -51,3 +51,14 @@ bool Cycles::SetAndBroadcast(int input)
 
 int Cycles::Get() const { return cycles_; }
 
+std::optional<int> Cycles::GetRemote() const
+{
+	if(!channel_) return std::nullopt;
+	try {
+		auto fut = channel_->GetAsync<int>();
+		return std::optional<int>{fut.get()};
+	} catch(std::runtime_error const& e) {
+		std::cerr << "Error Setting Cycles: " << e.what() << '\n';
+		return std::nullopt;
+	}
+}
