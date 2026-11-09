@@ -4,6 +4,7 @@
 #include "Cycles.h"
 #include "Status.h"
 #include "Frequency.h"
+#include "Amplitude.h"
 #include "Message.h"
 #include "Sender.h"
 
