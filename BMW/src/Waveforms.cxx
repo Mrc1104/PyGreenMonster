@@ -17,6 +17,10 @@ void Waveform::Set(WaveformType input)
 }
 bool Waveform::Broadcast()
 {
+	// Question:
+	// Does writing a '1' to the Sine PV automatically write
+	// a '0' to the Ramp PV?
+	// Not sure, will toggle both
 	return (sine_.Toggle(active_) and ramp_.Toggle(active_));
 }
 
