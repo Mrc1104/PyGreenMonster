@@ -3,16 +3,17 @@
 #include "MetaData.h"
 #include <new>
 #include <cstdlib>
+#include <iostream>
 
 BMWCoil CreateListOfHallACoils(std::size_t* items)
 {
 	using namespace BMW;
+
+	auto& meta = MetaData::Instance();
 	// Loop once to get the size
 	std::size_t counter{0};
 	counter = 0;
-	MetaData meta;
-	for(auto& data : meta.Get([](Meta const& meta) { return meta.hall_ == Hall::A; })) {
-		if( Modtype::Empty == data.mod_ ) continue;
+	for(auto& data : meta.GetHallA()) {
 		counter++;
 	}
 	*items = counter;
@@ -27,8 +28,8 @@ BMWCoil CreateListOfHallACoils(std::size_t* items)
 	counter = 0;
 	Coil* coil_array = static_cast<Coil*>( buffer );
 	// Loop twice to fill
-	for(auto& data : meta.Get([](Meta const& meta) { return meta.hall_ == Hall::A; })) {
-		if( Modtype::Empty == data.mod_ ) continue;
+	for(auto& data : meta.GetHallA()) {
+		std::cout << "Creating coil #" << counter << '\n';
 		new (&coil_array[counter++]) Coil(data);
 	}
 	return static_cast<BMWCoil>( coil_array );

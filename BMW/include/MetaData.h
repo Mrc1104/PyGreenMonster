@@ -43,16 +43,36 @@ class MetaData
 {
 	static constexpr std::size_t N_CHANNELS = 16;
 	static const std::array<Meta, N_CHANNELS> meta_;
+	MetaData() = default;
+	MetaData(MetaData const&) = delete;
+	MetaData& operator=(MetaData const&) = delete;
+	MetaData(MetaData &&) = delete;
+	MetaData& operator=(MetaData &&) = delete;
 public:
+	static MetaData& Instance();
 	template<typename Predicate>
 	[[nodiscard]] auto Get(Predicate&& predicate);
+	[[nodiscard]] auto GetHallA();
+	[[nodiscard]] auto GetHallC();
 };
 
 
 template<typename Predicate>
-[[nodiscard]] auto MetaData::Get(Predicate&& predicate)
+auto MetaData::Get(Predicate&& predicate)
 {
 	return meta_ | std::ranges::views::filter(std::forward<Predicate>(predicate));
+}
+
+inline auto MetaData::GetHallA() {
+	return meta_ | std::ranges::views::filter([](Meta const& meta) {
+		return (meta.hall_ == Hall::A) && (meta.mod_ != Modtype::Empty);
+	});
+}
+
+inline auto MetaData::GetHallC() {
+	return meta_ | std::ranges::views::filter([](Meta const& meta) {
+		return (meta.hall_ == Hall::C) && (meta.mod_ != Modtype::Empty);
+	});
 }
 
 std::string stringify(TrimCard card);

@@ -36,3 +36,10 @@ std::string BMW::stringify(BMW::TrimChan chan) {
 	};
 	return str;
 };
+
+MetaData& MetaData::Instance()
+{
+	static MetaData instance;
+	return instance;
+}
+

@@ -12,9 +12,8 @@
 using namespace BMW;
 int main()
 {
-	MetaData meta;
 	std::string coil;
-	for(auto& data : meta.Get([](Meta const& meta) { return meta.id_.Get() == 0; })) {
+	for(auto& data : MetaData::Instance().Get([](Meta const& meta) { return meta.id_.Get() == 0; })) {
 		std::cout << data.id_.Get() << '\t' << data.name_.Get() << '\n';
 		coil = data.GetPV();
 	}

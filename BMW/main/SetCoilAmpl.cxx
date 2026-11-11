@@ -19,7 +19,7 @@ using namespace BMW;
 void usage(char const* exe)
 {
 
-	MetaData meta;
+	auto& meta = MetaData::Instance();
 
 	std::cout << "Usage:\n" << exe << " <Coil> <0:Sine, 1:Ramp: 2:RF> <Ampl>\n";
 	std::cout << "Example: ./build/BMW/setcoilAmpl MHF1C08H 1 205\n";
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 		usage(argv[0]);
 		return 0;
 	}
-	MetaData meta;
+	auto& meta = MetaData::Instance();
 	std::string coil;
 	char const* targ_coil = argv[1];
 	int wave = std::atoi(argv[2]);
