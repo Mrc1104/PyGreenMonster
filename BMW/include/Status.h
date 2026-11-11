@@ -31,9 +31,7 @@ namespace BMW
 		Status GetStatus() const;
 		bool GetConnStatus() const;
 
-		// No-op
 		void Update(int const& data) override;
-
 	};
 
 

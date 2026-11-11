@@ -64,5 +64,5 @@ Status State::GetStatus() const { return convertToStatus(status_.Load()); }
 bool State::GetConnStatus() const { return channel_->isConnected(); }
 // Not implemented yet. Leave as a No-op
 // Instead, callers should poll GetConnStatus() or GetStatus()
-void State::Update(int const& data) { return; }
+void State::Update(int const& data) { status_.Store(data); }
 
