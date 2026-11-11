@@ -1,6 +1,7 @@
 #include "c_api.h"
 #include "Coil.h"
 #include "MetaData.h"
+#include "GlobalEnable.h"
 #include <new>
 #include <cstdlib>
 #include <iostream>
@@ -111,3 +112,20 @@ Modtype GetModType(BMWCoilObj coil)
 	auto ptr = static_cast<Coil*>(coil);
 	return ptr->GetModType();
 }
+
+bool EnableBeamMod()
+{
+	using namespace BMW;
+	return MasterSwitch::Instance().Enable();
+}
+bool DisableBeamMod()
+{
+	using namespace BMW;
+	return MasterSwitch::Instance().Disable();
+}
+bool isBeamModEnabled()
+{
+	using namespace BMW;
+	return MasterSwitch::Instance().isEnabled();
+}
+

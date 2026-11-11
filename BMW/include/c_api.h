@@ -21,5 +21,10 @@ extern "C"
 	int GetCoilId(BMWCoilObj coil);
 	Modtype GetModType(BMWCoilObj coil);
 	Status GetStatus(BMWCoilObj coil);
+
+	bool EnableBeamMod();
+	bool DisableBeamMod();
+	bool isBeamModEnabled();
+
 };
 
