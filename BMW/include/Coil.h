@@ -30,6 +30,7 @@ namespace BMW
 
 		const char* GetName() const;
 		int GetID() const;
+		Modtype GetModType() const;
 		Status GetStatus() const;
 	};
 

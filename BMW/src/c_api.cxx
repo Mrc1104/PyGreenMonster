@@ -94,3 +94,11 @@ Status GetStatus(BMWCoil coil)
 	return ptr->GetStatus();
 }
 
+
+Modtype GetModType(BMWCoil coil)
+{
+	using namespace BMW;
+	auto ptr = static_cast<Coil*>(coil);
+	return ptr->GetStatus();
+}
+

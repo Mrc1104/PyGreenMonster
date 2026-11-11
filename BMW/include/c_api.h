@@ -16,6 +16,7 @@ extern "C"
 
 	const char* GetCoilName(BMWCoil coil);
 	int GetCoilId(BMWCoil coil);
+	Modtype GetModType(BMWCoil coil);
 	Status GetStatus(BMWCoil coil);
 };
 

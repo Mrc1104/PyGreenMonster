@@ -4,13 +4,13 @@
 #include <string>
 #include <iostream>
 using namespace std::string_view_literals;
-namespace BMW {
 
+enum class Modtype { Coil, Energy, Empty };
+namespace BMW {
 enum class Hall	{A,	C};
 enum class TrimCard { BMOD1, BMOD2 };
 enum class TrimChan { CHAN0, CHAN1, CHAN2, CHAN3 };
 enum class EPIVS_PV { WAVESTATE, FREQUENCY, AMPLITUDE, SINEWAVE, RAMPWAVE, RCRINPUT, TRIGSTATEBTN, TRIGBTN, STOPBTN };
-enum class Modtype { Coil, Energy, Empty };
 struct Name {
 	const char* name_;
 	explicit consteval Name(const char* name) : name_(name) {}
