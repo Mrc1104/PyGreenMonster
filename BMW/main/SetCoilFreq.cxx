@@ -1,16 +1,15 @@
-
 #include "Status.h"
 #include "Cycles.h"
 #include "MetaData.h"
 #include "Amplitude.h"
 #include "Frequency.h"
 #include "Waveforms.h"
+#include "GlobalEnable.h"
 #include <string>
 #include <iostream>
 #include <thread>
 #include <chrono>
 
-const char* MASTER_SWITCH = "BEAMMODSWITCH";
 constexpr unsigned conn_wait = 500;
 
 using namespace BMW;
@@ -60,9 +59,12 @@ int main(int argc, char** argv)
 	}
 
 	print_section_header("Enable Master Switch");
-	auto master = EpicHandler::Instance().ConnectChannel(MASTER_SWITCH);
+	auto& master = MasterSwitch::Instance();
 	std::this_thread::sleep_for(std::chrono::milliseconds(conn_wait));
-	master->PutAsync(1).get();
+	if( master.Enable() == false ) {
+		std::cout << "Failed to Enable Beam Mod. Exiting\n";
+		return 0;
+	}
 
 
 	print_section_header("Check Coil Status");
@@ -87,7 +89,9 @@ int main(int argc, char** argv)
 
 	freq.SetAndBroadcast(curr_value);
 	print_section_header("Disable Master Switch");
-	master->PutAsync(0).get();
+	if( master.Disable() == false ) {
+		std::cout << "Failed to Disable Beam Mod. Exiting\n";
+	}
 
 	return 0;
 }

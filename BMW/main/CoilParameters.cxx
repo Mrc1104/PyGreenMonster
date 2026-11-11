@@ -4,6 +4,7 @@
 #include "Amplitude.h"
 #include "Frequency.h"
 #include "Waveforms.h"
+#include "GlobalEnable.h"
 #include <string>
 #include <iostream>
 #include <thread>
