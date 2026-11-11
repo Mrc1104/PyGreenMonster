@@ -19,8 +19,8 @@ namespace BMW
 
 	class State : public EPICSObserver<int>
 	{
-		AtomicEpicsType<int> status_{static_cast<int>(Status::Off)};
 		EpicChannel* channel_{nullptr};
+		AtomicEpicsType<int> status_{static_cast<int>(Status::Off)};
 	public:
 		static constexpr std::string_view EPIC_PV_SUFFIX{":WAVESTATE"};
 		State() = default;
