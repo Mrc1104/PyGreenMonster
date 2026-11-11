@@ -2,7 +2,7 @@
 
 using namespace BMW;
 
-Coil::Coil(Meta meta)
+Coil::Coil(Meta const& meta)
 : meta_(meta)
 {
 	auto pv = meta_.GetPV();
@@ -21,7 +21,7 @@ Coil::~Coil() = default;
 
 bool Coil::isEnergyModulator() const
 {
-	return meta_.mod_ == Modtype::Energy;
+	return meta_.mod_ == Modtype::BMWEnergy;
 }
 
 bool Coil::SetAmplitude(double const input)

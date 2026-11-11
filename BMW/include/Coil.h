@@ -19,7 +19,8 @@ namespace BMW
 
 		bool isEnergyModulator() const;
 	public:
-		Coil(Meta meta);
+		Coil(Meta const& meta);
+		Coil(Meta&& meta) = delete;
 		Coil(Coil const&) = default;
 		Coil& operator=(Coil const&) = default;
 		~Coil();

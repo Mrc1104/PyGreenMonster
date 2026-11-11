@@ -49,29 +49,31 @@ class MetaData
 	MetaData(MetaData &&) = delete;
 	MetaData& operator=(MetaData &&) = delete;
 public:
-	static MetaData& Instance();
+	static MetaData const& Instance();
 	template<typename Predicate>
-	[[nodiscard]] auto Get(Predicate&& predicate);
-	[[nodiscard]] auto GetHallA();
-	[[nodiscard]] auto GetHallC();
+	[[nodiscard]] auto Get(Predicate&& predicate) const;
+	[[nodiscard]] auto GetHallA() const;
+	[[nodiscard]] auto GetHallC() const;
 };
 
 
 template<typename Predicate>
-auto MetaData::Get(Predicate&& predicate)
+auto MetaData::Get(Predicate&& predicate) const
 {
 	return meta_ | std::ranges::views::filter(std::forward<Predicate>(predicate));
 }
 
-inline auto MetaData::GetHallA() {
+inline auto MetaData::GetHallA() const
+{
 	return meta_ | std::ranges::views::filter([](Meta const& meta) {
-		return (meta.hall_ == Hall::A) && (meta.mod_ != Modtype::Empty);
+		return (meta.hall_ == Hall::A) && (meta.mod_ != Modtype::BMWEmpty);
 	});
 }
 
-inline auto MetaData::GetHallC() {
+inline auto MetaData::GetHallC() const
+{
 	return meta_ | std::ranges::views::filter([](Meta const& meta) {
-		return (meta.hall_ == Hall::C) && (meta.mod_ != Modtype::Empty);
+		return (meta.hall_ == Hall::C) && (meta.mod_ != Modtype::BMWEmpty);
 	});
 }
 
