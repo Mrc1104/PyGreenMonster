@@ -21,6 +21,13 @@ class OpaquePointer(ctypes.c_void_p):
 class WaveformType(IntEnum):
     Sine   = 0
     Ramp   = 1
+class TriggerState(IntEnum):
+	Enable  = 0
+	Disable = 1
+class CoilType(IntEnum):
+	Coil   = 0
+	Energy = 1
+    Empty  = 2
 
 class MessageType(IntEnum):
 		Status   = 0

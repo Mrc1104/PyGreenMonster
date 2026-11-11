@@ -5,7 +5,7 @@
 
 enum WaveformType
 {
-	Sine,
+	Sine = 0,
 	Ramp
 };
 
