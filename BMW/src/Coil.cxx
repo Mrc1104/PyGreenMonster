@@ -54,6 +54,6 @@ bool Coil::SetCycles(std::size_t const input)
 
 const char* Coil::GetName() const { return meta_.name_.Get(); }
 int Coil::GetID()           const { return meta_.id_.Get();   }
-Modtype Coil::GetModType()  const { return meta_.mod_.Get();  }
+Modtype Coil::GetModType()  const { return meta_.mod_;  }
 Status Coil::GetStatus()    const { return state_.GetStatus();}
 

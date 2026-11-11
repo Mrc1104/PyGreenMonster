@@ -34,12 +34,13 @@ BMWCoil CreateListOfHallACoils(std::size_t* items)
 	}
 	return static_cast<BMWCoil>( coil_array );
 }
-void DestroyCoil(BMWCoil coil, std::size_t items)
+void DestroyListOfCoils(BMWCoil coil, std::size_t items)
 {
 	using namespace BMW;
 	if(coil == nullptr) return;
 	auto arr = static_cast<Coil*>(coil);
 	for( std::size_t i = 0; i < items; i++) {
+		std::cout << "Destroying coil #" << i << '\n';
 		arr[i].~Coil();
 	}
 	free( arr );
@@ -100,6 +101,6 @@ Modtype GetModType(BMWCoil coil)
 {
 	using namespace BMW;
 	auto ptr = static_cast<Coil*>(coil);
-	return ptr->GetStatus();
+	return ptr->GetModType();
 }
 

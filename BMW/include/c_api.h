@@ -2,11 +2,12 @@
 #include <cstddef>
 #include "Waveforms.h"
 #include "Status.h"
+#include "MetaData.h"
 extern "C"
 {
 	typedef void* BMWCoil;
 	BMWCoil CreateListOfHallACoils(std::size_t* items);
-	void DestroyListOfCoil(BMWCoil* coils);
+	void DestroyListOfCoils(BMWCoil coils, std::size_t items);
 	std::size_t GetCoilMemSize();
 	bool SetBMWAmplitude(BMWCoil coil, double input);
 	bool SetBMWWave(BMWCoil coil, WaveformType const input);
