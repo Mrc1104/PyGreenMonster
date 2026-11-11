@@ -6,7 +6,7 @@
 
 enum TrigState
 {
-	BMWEnable,
+	BMWEnable = 0,
 	BMWDisable
 };
 namespace BMW
