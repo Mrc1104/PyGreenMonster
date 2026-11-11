@@ -77,6 +77,14 @@ bool SetBMWCycles(BMWCoilObj coil, int const input)
 	return ptr->SetCycles(input);
 }
 
+bool SetBMWTrigger(BMWCoilObj coil, TrigState const input)
+{
+	using namespace BMW;
+	auto ptr = static_cast<Coil*>(coil);
+	return ptr->SetTriggerState(input);
+}
+
+
 const char* GetCoilName(BMWCoilObj coil)
 {
 	using namespace BMW;
@@ -103,4 +111,3 @@ Modtype GetModType(BMWCoilObj coil)
 	auto ptr = static_cast<Coil*>(coil);
 	return ptr->GetModType();
 }
-

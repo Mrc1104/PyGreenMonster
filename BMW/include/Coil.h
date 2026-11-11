@@ -5,6 +5,8 @@
 #include "Status.h"
 #include "Frequency.h"
 #include "Amplitude.h"
+#include "TriggerState.h"
+
 
 namespace BMW
 {
@@ -15,6 +17,7 @@ namespace BMW
 		Ampl ampl_{};
 		Cycles cycles_{};
 		Frequency freq_{};
+		TriggerState trig_{};
 		Meta const& meta_;
 
 		bool isEnergyModulator() const;
@@ -28,6 +31,7 @@ namespace BMW
 		bool SetWave(WaveformType const input);
 		bool SetFrequency(double const input);
 		bool SetCycles(std::size_t const input);
+		bool SetTriggerState(TrigState const state);
 
 		const char* GetName() const;
 		int GetID() const;

@@ -2,6 +2,7 @@
 #include <cstddef>
 #include "Waveforms.h"
 #include "Status.h"
+#include "TriggerState.h"
 #include "MetaData.h"
 extern "C"
 {
@@ -13,6 +14,7 @@ extern "C"
 	bool SetBMWWave(BMWCoilObj coil, WaveformType const input);
 	bool SetBMWFrequency(BMWCoilObj coil, double const input);
 	bool SetBMWCycles(BMWCoilObj coil, int const input);
+	bool SetBMWTrigger(BMWCoilObj coil, TrigState const input);
 
 
 	const char* GetCoilName(BMWCoilObj coil);

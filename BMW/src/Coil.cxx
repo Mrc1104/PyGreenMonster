@@ -11,6 +11,7 @@ Coil::Coil(Meta const& meta)
 	ampl_.Attach(pv);
 	cycles_.Attach(pv);
 	freq_.Attach(pv);
+	trig_.Attach(pv);
 	if(isEnergyModulator()) {
 		ampl_ = RFVernierAmplitude();
 		wave_.Set( WaveformType::Sine );
@@ -49,6 +50,12 @@ bool Coil::SetFrequency(double const input)
 bool Coil::SetCycles(std::size_t const input)
 {
 	return cycles_.SetAndBroadcast(input);
+}
+
+bool Coil::SetTriggerState(TrigState const state)
+{
+
+	return trig_.SetAndBroadcast(state);
 }
 
 

@@ -15,6 +15,8 @@ int main()
 	std::cout << "Setting Wave: " <<      SetBMWWave(coils, Ramp) << '\n';
 	std::cout << "Setting Frequency: " << SetBMWFrequency(coils, 105) << '\n';
 	std::cout << "setting Cycles: " <<    SetBMWCycles(coils, 99) << '\n';
+	std::cout << "Enabling Trigger: " <<  SetBMWTrigger(coils, BMWEnable) << '\n';
+	std::cout << "Disabling Trigger: " <<  SetBMWTrigger(coils, BMWDisable) << '\n';
 
 	std::cout << "Printing out names and IDs: " << '\n';
 	auto coil_arr = static_cast<BMW::Coil*>( coils );
