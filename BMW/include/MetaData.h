@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std::string_view_literals;
 
-enum class Modtype { Coil, Energy, Empty };
+enum Modtype { BMWCoil, BMWEnergy, BMWEmpty };
 namespace BMW {
 enum class Hall	{A,	C};
 enum class TrimCard { BMOD1, BMOD2 };

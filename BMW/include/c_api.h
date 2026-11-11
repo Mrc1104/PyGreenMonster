@@ -5,19 +5,19 @@
 #include "MetaData.h"
 extern "C"
 {
-	typedef void* BMWCoil;
-	BMWCoil CreateListOfHallACoils(std::size_t* items);
-	void DestroyListOfCoils(BMWCoil coils, std::size_t items);
+	typedef void* BMWCoilObj;
+	BMWCoilObj CreateListOfHallACoils(std::size_t* items);
+	void DestroyListOfCoils(BMWCoilObj coils, std::size_t items);
 	std::size_t GetCoilMemSize();
-	bool SetBMWAmplitude(BMWCoil coil, double input);
-	bool SetBMWWave(BMWCoil coil, WaveformType const input);
-	bool SetBMWFrequency(BMWCoil coil, double const input);
-	bool SetBMWCycles(BMWCoil coil, int const input);
+	bool SetBMWAmplitude(BMWCoilObj coil, double input);
+	bool SetBMWWave(BMWCoilObj coil, WaveformType const input);
+	bool SetBMWFrequency(BMWCoilObj coil, double const input);
+	bool SetBMWCycles(BMWCoilObj coil, int const input);
 
 
-	const char* GetCoilName(BMWCoil coil);
-	int GetCoilId(BMWCoil coil);
-	Modtype GetModType(BMWCoil coil);
-	Status GetStatus(BMWCoil coil);
+	const char* GetCoilName(BMWCoilObj coil);
+	int GetCoilId(BMWCoilObj coil);
+	Modtype GetModType(BMWCoilObj coil);
+	Status GetStatus(BMWCoilObj coil);
 };
 
