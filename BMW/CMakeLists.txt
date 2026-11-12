@@ -50,7 +50,7 @@ install(TARGETS ${PROJECT_NAME}
 #----------------------------------------------------------------------------
 # Remex library Python Bindings
 #
-#add_binding_dep(${PROJECT_NAME} RemexClient.py ${CMAKE_CURRENT_SOURCE_DIR} ${PYTHON_LIBRARY_DIR})
+add_binding_dep(${PROJECT_NAME} BMW.py ${CMAKE_CURRENT_SOURCE_DIR} ${PYTHON_LIBRARY_DIR})
 
 #----------------------------------------------------------------------------
 # executables

@@ -22,48 +22,46 @@ class WaveformType(IntEnum):
     Sine   = 0
     Ramp   = 1
 class TriggerState(IntEnum):
-	Enable  = 0
-	Disable = 1
+    Enable  = 0
+    Disable = 1
 class CoilStatus(IntEnum):
-	Off     = 0
-	Config  = 1
-	Trigger = 2
-	Test    = 3
-	Unknown = 4
+    Off     = 0
+    Config  = 1
+    Trigger = 2
+    Test    = 3
+    Unknown = 4
 class CoilType(IntEnum):
-	Coil   = 0
-	Energy = 1
+    Coil   = 0
+    Energy = 1
     Empty  = 2
+CreateListOfCoils = wrap_function(BMWLib, "CreateListOfHallACoils", OpaquePointer  , [ctypes.POINTER(ctypes.c_size_t)])
+DeleteListOfCoils = wrap_function(BMWLib, "DestroyListOfCoils"    , None           , [OpaquePointer, ctypes.c_size_t] )
+GetCoilMemSize    = wrap_function(BMWLib, "GetCoilMemSize"        , ctypes.c_size_t, None                             )
 
+SetCoilAmplitude  = wrap_function(BMWLib, "SetBMWAmplitude"       , ctypes.c_bool  , [OpaquePointer, ctypes.c_double] )
+SetCoilWaveType   = wrap_function(BMWLib, "SetBMWWave"           , ctypes.c_bool  , [OpaquePointer, ctypes.c_int]     )
+SetCoilFrequency  = wrap_function(BMWLib, "SetBMWFrequency"      , ctypes.c_bool  , [OpaquePointer, ctypes.c_double]  )
+SetCoilCycles     = wrap_function(BMWLib, "SetBMWCycles"         , ctypes.c_bool  , [OpaquePointer, ctypes.c_int]     )
+SetCoilTrigger    = wrap_function(BMWLib, "SetBMWTrigger"        , ctypes.c_bool  , [OpaquePointer, ctypes.c_int]     )
 
-CreateListOfCoils = wrap_function(BMWLib, "CreateListOfHallACoils", OpaquePointer, [ctypes.POINTER(ctypes.c_size_t)])
-DeleteListOfCoils = wrap_function(BMWLib, "DestroyListOfCoils", None, [OpaquePointer, ctypes.c_size_t])
-GetCoilMemSize    = wrap_function(BMWLib, "GetCoilMemSize", ctypes.c_size_t, None)
+GetCoilName       = wrap_function(BMWLib, "GetCoilName"           , ctypes.c_char_p, [OpaquePointer]                  )
+GetCoilId         = wrap_function(BMWLib, "GetCoilId"             , ctypes.c_int   , [OpaquePointer]                  )
+GetCoilType       = wrap_function(BMWLib, "GetModType"            , ctypes.c_int   , [OpaquePointer]                  )
+GetCoilStatus     = wrap_function(BMWLib, "GetStatus"             , ctypes.c_int   , [OpaquePointer]                  )
 
-SetCoilAmplitude  = wrap_function(BMWLib, "SetBMWAmplitude", ctypes.c_bool, [OpaquePointer, ctypes.c_double])
-SetCoilWaveType   = wrap_functions(BMWLib, "SetBMWWave"     , ctypes.c_bool, [OpaquePointer, ctypes.c_int])
-SetCoilFrequency  = wrap_functions(BMWLib, "SetBMWFrequency", ctypes.c_bool, [OpaquePointer, ctypes.c_double])
-SetCoilCycles     = wrap_functions(BMWLib, "SetBMWCycles"   , ctypes.c_bool, [OpaquePointer, ctypes.c_int])
-SetCoilTrigger    = wrap_functions(BMWLib, "SetBMWTrigger"  , ctypes.c_bool, [OpaquePointer, ctypes.c_int])
+EnableBeamMod     = wrap_function(BMWLib, "EnableBeamMod"         , ctypes.c_bool  , None                             )
+DisableBeamMod    = wrap_function(BMWLib, "DisableBeamMod"        , ctypes.c_bool  , None                             )
+IsBeamModEnabled  = wrap_function(BMWLib, "isBeamModEnabled"      , ctypes.c_bool  , None                             )
 
-GetCoilName       = wrap_function(BMWLib, "GetCoilName" , ctypes.c_char_p, [OpaquePointer])
-GetCoilId         = wrap_function(BMWLib, "GetCoilId"   , ctypes.c_int   , [OpaquePointer])
-GetCoilType       = wrap_function(BMWLib, "GetModType"  , ctypes.c_int   , [OpaquePointer])
-GetCoilStatus     = wrap_function(BMWLib, "GetStatus"   , ctypes.c_int   , [OpaquePointer])
-
-EnableBeamMod     = wrap_function(BMWLib, "EnableBeamMod"   , ctypes.c_bool, None) 
-DisableBeamMod    = wrap_function(BMWLib, "DisableBeamMod"  , ctypes.c_bool, None)
-IsBeamModEnabled  = wrap_function(BMWLib, "isBeamModEnabled", ctypes.c_bool, None)
-
-
+BeamModStartup    = wrap_function(BMWLib, "BeamModStartup"        , ctypes.c_bool  , None                             )
 
 class BMWCoils:
-    __init__(self, ptr, resource_mgt: "BeamModCoils"):
-    self.obj = ptr;
-    self.parent = resource_mgt
-    self.name   = GetCoilName(self)
-    self.id     = GetCoilId(self)
-    self.type   = CoilType(GetCoilType(self))
+    def __init__(self, ptr, resource_mgt: "BeamModCoils"):
+        self.obj = ptr;
+        self.parent = resource_mgt
+        self.name   = GetCoilName(self)
+        self.id     = GetCoilId(self)
+        self.type   = CoilType(GetCoilType(self))
 
     @property
     def _as_parameter_(self) -> int:
@@ -85,8 +83,8 @@ class BMWCoils:
     def EnableTrigger(self, val : TriggerState) -> bool:
         return SetCoilTrigger(self, val)
 
-class BeamModCoils(OpaquePointer):
-    def __init__:
+class BeamModCoils:
+    def __init__(self):
         self.ncoils = ctypes.c_size_t(0)
         self.base_addr  = CreateListOfCoils(ctypes.byref(self.ncoils))
         if not self.coils:

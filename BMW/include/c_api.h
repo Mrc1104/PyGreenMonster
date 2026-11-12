@@ -23,6 +23,7 @@ extern "C"
 	Modtype GetModType(BMWCoilObj coil);
 	Status GetStatus(BMWCoilObj coil);
 
+	bool BeamModStartup();
 	bool EnableBeamMod();
 	bool DisableBeamMod();
 	bool isBeamModEnabled();

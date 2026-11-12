@@ -80,7 +80,7 @@ class GreenMonster:
 
         tab_control = ttk.Notebook(self.win)
         tab_titles = [#('ScanUtil', scan_util.ScanUtil),
-                      ('BMW', beam_mod.BMW), 
+                      ('bmw', beam_mod.BeamMod), 
                       ('EX' , example.Example)]
                       #('ScanUtil', scan_util.ScanUtil)]
                       #('Expert', self.expert_tab)]

@@ -3,6 +3,8 @@
 #include "MetaData.h"
 #include "GlobalEnable.h"
 #include <new>
+#include <thread>
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
 
@@ -128,4 +130,13 @@ bool isBeamModEnabled()
 	using namespace BMW;
 	return MasterSwitch::Instance().isEnabled();
 }
-
+bool BeamModStartup()
+{
+	// This routine makes sure that the Global switch
+	// is instantiated. It waits for a set time and then
+	// attempts to read the value
+	using namespace BMW;
+	auto& master_switch = MasterSwitch::Instance();
+	std::this_thread::sleep_for(std::chrono::milliseconds(250));
+	return master_switch.isEnabled();
+}

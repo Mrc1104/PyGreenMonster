@@ -12,7 +12,7 @@ namespace BMW
 		static constexpr int DISABLE = 0;
 
 		EpicChannel* channel_{nullptr};
-		AtomicEpicsType<int> status_{static_cast<int>(ENABLE)};
+		AtomicEpicsType<int> status_{static_cast<int>(DISABLE)};
 
 		MasterSwitch();
 		~MasterSwitch();
