@@ -10,6 +10,7 @@ extern "C"
 	BMWCoilObj CreateListOfHallACoils(std::size_t* items);
 	void DestroyListOfCoils(BMWCoilObj coils, std::size_t items);
 	std::size_t GetCoilMemSize();
+
 	bool SetBMWAmplitude(BMWCoilObj coil, double input);
 	bool SetBMWWave(BMWCoilObj coil, WaveformType const input);
 	bool SetBMWFrequency(BMWCoilObj coil, double const input);
