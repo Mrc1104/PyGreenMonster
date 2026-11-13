@@ -85,19 +85,26 @@ class BMWCoils:
 
 class BeamModCoils:
     def __init__(self):
-        self.ncoils = ctypes.c_size_t(0)
-        self.base_addr  = CreateListOfCoils(ctypes.byref(self.ncoils))
-        if not self.coils:
-            raise MemoryError(f"{_lib_name_} could not allocate coil array!")
-        self.nbytes = GetCoilMemSize()
-        self.coils  = __GetCoilArrayFromBase(self.base_addr, self.nbytes, self.ncoils.value)
-
+        self._ncoils = ctypes.c_size_t(0)
+        self._base_addr  = CreateListOfCoils(ctypes.byref(self._ncoils))
+        if not self._base_addr:
+            raise MemoryError(f"{_lib_name} could not allocate coil array!")
+        self._nbytes = GetCoilMemSize()
+        self._coils  = self.__GetCoilArrayFromBase(self._base_addr, self._nbytes, self._ncoils.value)
     def __del__(self):
-        DeleteListOfCoils(self.base_addr, self.ncoils)
-        self.base_addr = None
-        self.ncoils = 0
+        self.Close()
 
-    def __GetCoilArrayFromBase(self, base_addr, mem_size, count):
-        array = [
-        BMWCoils(base_addr + (i * mem_size), self)
-        for i in range(count)]
+    def Close(self):
+        if not self._base_addr:
+            return
+        DeleteListOfCoils(self._base_addr, self._ncoils)
+        self._base_addr = None
+        self._ncoils = 0
+
+    def __GetCoilArrayFromBase(self, _base_addr, mem_size, count):
+        return [
+            BMWCoils(_base_addr.value + (i * mem_size))
+            for i in range(count)
+        ]
+    def __iter__(self):
+        return iter(self._coils)

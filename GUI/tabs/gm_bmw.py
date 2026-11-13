@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import GUI.utils as u
 import GUI.Colors as gmc
+from GUI.tabs.gm_tab import BaseTab
 import Bindings.RemexClient as Remex
 import Bindings.BMW as bmw
 
@@ -76,10 +77,15 @@ class CoilFields:
         return self.ampl_entry.GetEntry()
     def GetCycl(self):
         return self.cycl_entry.GetEntry()
-class BeamMod(tk.Frame):
+
+
+class BeamMod(BaseTab):
   def __init__(self, tab):
      super().__init__(tab)
-     print(f"BeamMod Startup = {bmw.BeamModStartup()}")
+     #print(f"BeamMod Startup = {bmw.BeamModStartup()}")
+     self.CoilManager = bmw.BeamModCoils()
+     #for coil in self.CoilManager:
+          #pass
     ## Member vars
      self.coil_list = [ CoilName(0, 'MHF1C01H'), CoilName(1, 'MHF1C02H'), CoilName(2, 'MHF1C03V'), CoilName(3,'MHF1C08H'), CoilName(4,'MHF1C08V'), CoilName(5,'MHF1C10H'), CoilName(6,'MHF1C10V'), CoilName(7,'SL 20 Vernier')]
      self.coil_names= [coil.name for coil in self.coil_list]
@@ -139,3 +145,11 @@ class BeamMod(tk.Frame):
 
      cycle_notebook.add(sup_cyc_tab, text="Super Cycle")
      cycle_notebook.add(sing_coil_tab, text="Single Coil")
+
+  def CleanUp(self):
+     print("beammod::Destory called")
+     self.CoilManager.Close()
+        
+        
+     
+     

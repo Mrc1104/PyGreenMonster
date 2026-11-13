@@ -103,4 +103,3 @@ class Example(BaseTab):
 
   def CleanUp(self):
      print("Example::Destory called")
-     #super().destroy()
