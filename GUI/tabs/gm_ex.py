@@ -2,10 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import GUI.utils as u
 import GUI.Colors as gmc
+from GUI.tabs.gm_tab import BaseTab
 import Bindings.RemexClient as Remex
 
-class Example(tk.Frame):
+class Example(BaseTab):
   def __init__(self, tab):
+    super().__init__(tab)
     ## Tools frame
     tools_frame = tk.Frame(tab, width=200, height=400, bg="skyblue")
     tools_frame.pack(padx=5, pady=5, side=tk.LEFT, fill=tk.Y)
@@ -97,3 +99,8 @@ class Example(tk.Frame):
     
     self.bm_test_index.set(0)
     self.bm_test_setting.set(self.button_titles[self.bm_test_index.get()])
+
+
+  def CleanUp(self):
+     print("Example::Destory called")
+     #super().destroy()
