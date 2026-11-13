@@ -44,9 +44,7 @@ class GreenMonster:
         style.theme_use("green_monster")
 
     def quit(self):
-        self.win.quit()
         self.win.destroy()
-        exit()
 
     def educate_yourself(self, event):
       webbrowser.open_new(r"https://en.wikipedia.org/wiki/Green_Monster")
@@ -94,7 +92,7 @@ class GreenMonster:
         fenway_pahk = tk.Label(footer, image=self.fenway, cursor="hand2", bg=gmc.green)
         fenway_pahk.pack(side="left")
         fenway_pahk.bind("<Button-1>", self.educate_yourself)
-        tk.Button(footer, text='QUIT', command=quit, background=gmc.green, width=20, height=4).pack(side="right")
+        tk.Button(footer, text='QUIT', command=self.quit, background=gmc.green, width=20, height=4).pack(side="right")
 
 
 green_monster = GreenMonster()
