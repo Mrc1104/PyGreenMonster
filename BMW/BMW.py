@@ -56,21 +56,25 @@ IsBeamModEnabled  = wrap_function(BMWLib, "isBeamModEnabled"      , ctypes.c_boo
 BeamModStartup    = wrap_function(BMWLib, "BeamModStartup"        , ctypes.c_bool  , None                             )
 
 class BMWCoils:
-    def __init__(self, ptr, resource_mgt: "BeamModCoils"):
-        self.obj = ptr;
-        self.parent = resource_mgt
-        self.name   = GetCoilName(self)
+    def __init__(self, ptr):
+        self.obj    = ptr;
+        self.name   = GetCoilName(self).decode("utf-8")
         self.id     = GetCoilId(self)
         self.type   = CoilType(GetCoilType(self))
 
     @property
     def _as_parameter_(self) -> int:
         """Allows passing a BMWCoil instance directly to ctypes functions."""
-        if self.parent.base_addr is None:
-            raise RuntimeError("Cannot use BMWCoil after its parent buffer has been freed.")
-        return self.handle
+        return self.obj
+
     def GetStatus(self) -> CoilStatus:
         return CoilStatus(GetCoilStatus(self))
+    def GetName(self):
+        return self.name
+    def GetId(self):
+        return self.id
+    def GetType(self):
+        return self.type
 
     def SetAmplitude(self, val : float) -> bool:
         return SetCoilAmplitude(self, val)
