@@ -1,37 +1,34 @@
 #pragma once
-#include <thread>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-#include <memory>
-
-
+#include <type_traits>
 
 template<typename T>
-class ThQueue
+class threadsafe_queue
 {
-private:
+	static_assert(std::is_trivially_copyable_v<T>,
+			"This queue is only for trivially copyable objects!");
 	mutable std::mutex mut;
-	std::queue<T*> data_queue;
-	std::condition_variable data_cond;
+	std::queue<T> data_queue;
+	std::condition_variable data_cond;	
 public:
-	~ThQueue();
-	void push(T* value);
-	T* wait_and_pop();
-	T* try_pop();
+	threadsafe_queue() = default;
+	void push(T val);
+	T wait_and_pop();
+	bool try_and_pop(T& val);
 	bool empty() const;
 };
-
 template<typename T>
-void ThQueue<T>::push(T* value)
+void threadsafe_queue<T>::push(T val)
 {
 	std::lock_guard lk(mut);
-	data_queue.push(value);
+	data_queue.push(val);
 	data_cond.notify_one();
 }
 
 template<typename T>
-T* ThQueue<T>::wait_and_pop()
+T threadsafe_queue<T>::wait_and_pop()
 {
 	std::unique_lock lk(mut);
 	data_cond.wait(lk, [this]{ return !data_queue.empty(); });
@@ -41,31 +38,19 @@ T* ThQueue<T>::wait_and_pop()
 }
 
 template<typename T>
-T* ThQueue<T>::try_pop()
+bool threadsafe_queue<T>::try_and_pop(T& val)
 {
 	std::lock_guard lk(mut);
-	if(data_queue.empty()) return nullptr;
-	auto res = data_queue.front();
+	if(data_queue.empty()) return false;
+	val = data_queue.front();
 	data_queue.pop();
-	return res;
+	return true;
 }
 
 template<typename T>
-bool ThQueue<T>::empty() const
+bool threadsafe_queue<T>::empty() const
 {
 	std::lock_guard lk(mut);
 	return data_queue.empty();
-
-}
-
-template<typename T>
-ThQueue<T>::~ThQueue()
-{
-	std::lock_guard lk(mut);
-	while(!data_queue.empty()) {
-		auto res = data_queue.front();
-		delete res;
-		data_queue.pop();
-	}
 }
 
