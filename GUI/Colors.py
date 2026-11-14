@@ -1,5 +1,6 @@
 green    = '#3C8373'
 red      = '#ed3945'
+red_off  = '#a55e55'
 steel    = '#777B7E'
 pewter   = '#999DA0'
 timer_red= '#3C5353'
