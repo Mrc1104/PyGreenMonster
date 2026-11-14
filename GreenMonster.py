@@ -22,7 +22,7 @@ class GreenMonster:
         os.environ["TCL_LIBRARY"] = "/lib64/tcl8.5/"
         self.win = tk.Tk()
         self.win.title("Green Monster")
-        self.win.geometry("800x700")
+        self.win.geometry("800x775")
         self.win.configure(background=gmc.green)
         self.adc_options_vars = [tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar()]
         self.bm_test_setting = tk.StringVar()

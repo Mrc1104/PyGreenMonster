@@ -7,6 +7,7 @@ Code by A.J. Zec
 import tkinter as tk
 from ctypes import cdll
 import subprocess, os
+import GUI.Colors as gmc
 
 green_color = '#3C8373'
 
@@ -73,3 +74,24 @@ def send_command(crate_num, packet):
 
   return err_flag, reply 
   
+
+class BinaryButton(tk.Button):
+    def __init__(self, parent, state1, state2, callback1 = None, callback2 = None, **kwargs):
+        self._states    = [state1   , state2]
+        self._callbacks = [callback1, callback2]
+        self._active    = 0
+
+        super().__init__(parent, command = self._toggle, **kwargs)
+        self._update()
+    def _toggle(self):
+        self._active ^= 1
+        self._update()
+    def _update(self):
+        callback = self._callbacks[self._active]
+        state = self._states[self._active]
+        if self._active == 0:
+            self.config(relief="raised", bg=gmc.red_off, text=state)
+        else:
+            self.config(relief="sunken", bg=gmc.green, text=state)
+        if callback:
+            callback()

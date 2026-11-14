@@ -7,33 +7,28 @@ import Bindings.RemexClient as Remex
 import Bindings.BMW as bmw
 
 class LabeledEntry:
-    def __init__(self, parent, label, default_entry="",tk_var=None, rw="normal"):
-        self.tk_var = tk_var if tk_var != None else tk.StringVar(value=default_entry)
-        self.tk_var.set(default_entry)
-        self.frame = tk.Frame(parent, bg = gmc.pewter)
-        self.frame.pack(anchor='w', pady=(5,0), fill='x', expand=True)
+    def __init__(self, parent, label, entry_val, rw="normal"):
+        self._frame = tk.Frame(parent, bg = gmc.pewter)
+        self._frame.pack(anchor='w', pady=(5,5), fill='x', expand=True)
 
-        self.label = tk.Label(self.frame, text=label, bg = gmc.pewter)
-        self.label.pack(side='left', padx=(0,5), expand=True)
+        self._label = tk.Label(self._frame, text=label, font=("Arial", 10), bg = gmc.pewter)
+        self._label.pack(side='left', padx=(0,5), expand=True)
 
-        self.entry = tk.Entry(self.frame, width=10, justify="center", textvariable=self.tk_var, state=rw)
-        self.entry.pack(side="left", fill='x', expand=True)
+        self._rb = tk.Entry(self._frame, width=5, font=("Arial", 10), justify="center", textvariable=entry_val, state="readonly")
+        self._rb.pack(side="right", fill='x', expand=True)
+
+        self._entry = tk.Entry(self._frame, width=10, font=("Arial", 10), justify="center", textvariable=entry_val, state=rw)
+        self._entry.pack(side="right", fill='x', expand=True)
     def GetEntry(self):
         return self.entry.get()
-
-class CoilName:
-    def __init__(self, id, name):
-        self.name = name
-        self.id = id
+    def LockEntry(self):
+        self.entry.config(state="readonly")
+    def UnlockEntry(self):
+        self.entry.config(state="normal")
 
 class CoilVars:
     def __init__(self, parent, coil, waveforms):
         self.coil     = coil
-        self.freq_var = tk.StringVar(parent, value="")
-        self.ampl_var = tk.StringVar(parent, value="")
-        self.cycl_var = tk.StringVar(parent, value="")
-        self.wave_var = tk.StringVar(parent, value="")
-        self.stat_var = tk.StringVar(parent, value="")
         self.waveforms = waveforms
     def get_data(self):
         return {
@@ -52,25 +47,45 @@ class CoilVars:
             "stat" : self.stat_var
         }
 
-        
-
 class CoilFields:
-    def __init__(self, parent, coil_var : CoilVars, width=20, row=0, col=0):
+
+    def __init__(self, parent, coil: bmw.BMWCoils, width=20, row=0, col=0):
         self.frame = tk.Frame(parent, bg = gmc.pewter)
         self.frame.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
 
-        self.label = tk.Label(self.frame, text=f"(id {coil_var.coil.id}) {coil_var.coil.name}", bg=gmc.steel)
-        self.label.pack(anchor='w', fill='x')
 
-        fields = coil_var.get_fields();
-        wave_types = coil_var.waveforms
-        self.freq_entry = LabeledEntry(self.frame, "Freq [Hz]", 10       , fields['freq'])
-        self.ampl_entry = LabeledEntry(self.frame, "Ampl [A] ", 0.25     , fields['ampl'])
-        self.cycl_entry = LabeledEntry(self.frame, "Cycles   ", 100      , fields['cycl'])
-        self.stat_entry = LabeledEntry(self.frame, "Status   ", "Unknown", fields['stat'], "readonly")
-        wave = fields['wave']
-        wave.set(wave_types[0])
-        tk.OptionMenu(self.frame, wave, wave_types[0], *wave_types[1:], command=lambda x:print(f"Selected {x}")).pack(side="left", padx=5, pady=5, fill = 'x', expand='true')
+        title_frame = tk.Frame(self.frame, bg = gmc.steel)
+        title_frame.pack(fill='x')
+        self.label = tk.Label(title_frame, text=f"ID {coil.GetId()}: {coil.GetName()}", bg=gmc.steel)
+        self.label.pack(side = 'top', anchor='w',padx = (10,0), fill='x')
+
+        self.freq_var = tk.StringVar(self.frame, value="10")
+        self.ampl_var = tk.StringVar(self.frame, value="0.25")
+        self.cycl_var = tk.StringVar(self.frame, value="100")
+        self.wave_var = tk.StringVar(self.frame, value=bmw.WaveformType.Sine.name)
+        self.stat_var = tk.StringVar(self.frame, value=bmw.CoilStatus(bmw.GetCoilStatus(coil)).name)
+
+        entry_frame = tk.Frame(self.frame, bg = gmc.pewter)
+        entry_frame.pack(fill='x')
+        self.freq_entry = LabeledEntry(entry_frame, "Freq [Hz]", self.freq_var)
+        self.ampl_entry = LabeledEntry(entry_frame, "Ampl [A] ", self.ampl_var)
+        self.cycl_entry = LabeledEntry(entry_frame, "Cycles   ", self.cycl_var)
+        self.stat_entry = LabeledEntry(entry_frame, "Status   ", self.stat_var, "readonly")
+
+        opt = tk.OptionMenu(entry_frame, self.wave_var, *[w.name for w in bmw.WaveformType], command=lambda x:print(f"Selected {x}"))
+        opt.pack(side="left", padx=5, pady=5, fill = 'x', expand=True)
+        opt.config(width=10, font=("Arial", 10), anchor='w')
+        opt['menu'].config(font=("Arial", 10))
+
+    
+        apply_frame = tk.Frame(self.frame, bg=gmc.pewter)
+        apply_frame.pack(fill='x')
+        tk.Button(apply_frame, text="Apply", width=10, font=("Arial", 10), command=lambda: print("Apply Button Pressed")).pack(side = "left", fill='x', padx=(5,5), pady=(2,2), expand=True)
+        trigger_frame = tk.Frame(self.frame, bg=gmc.pewter)
+        trigger_frame.pack(fill='x', expand=True)
+        self.enable_btn = u.BinaryButton(trigger_frame, "Trigger Disable ", "Trigger Enable", width = 10,font=("Arial", 10))
+        self.enable_btn.pack(side='left', fill='x', padx=(5,5), pady=(1,0), expand=True)
+
     def GetFreq(self):
         return self.freq_entry.GetEntry()
     def GetAmpl(self):
@@ -84,14 +99,10 @@ class BeamMod(BaseTab):
      super().__init__(tab)
      #print(f"BeamMod Startup = {bmw.BeamModStartup()}")
      self.CoilManager = bmw.BeamModCoils()
-     #for coil in self.CoilManager:
-          #pass
+     for coil in self.CoilManager:
+          print(f"coil name = {coil.GetName()}")
     ## Member vars
-     self.coil_list = [ CoilName(0, 'MHF1C01H'), CoilName(1, 'MHF1C02H'), CoilName(2, 'MHF1C03V'), CoilName(3,'MHF1C08H'), CoilName(4,'MHF1C08V'), CoilName(5,'MHF1C10H'), CoilName(6,'MHF1C10V'), CoilName(7,'SL 20 Vernier')]
-     self.coil_names= [coil.name for coil in self.coil_list]
-     self.coil_ids  = [coil.id for coil in self.coil_list]
      self.coil_fields= [] # will be filled later
-     self.coil_values= [] # will be filled later
      self.waveforms = ['Sine', 'Ramp']
 
      tk.Label(tab, text="Coils", bg=gmc.green).pack(anchor="nw", pady=(5,0))
@@ -104,15 +115,13 @@ class BeamMod(BaseTab):
      
      ## Coil Fields
      MAX_COLUMNS = 4
-     for index, coil in enumerate(self.coil_list):
+     for index, coil in enumerate(self.CoilManager):
          row = index // MAX_COLUMNS
          col = index % MAX_COLUMNS
          coils_grid.grid_columnconfigure(col, weight=1)
          coils_grid.grid_rowconfigure(row, weight=1)
 
-         var = CoilVars(coils_grid, coil, self.waveforms)
-         field = CoilFields(coils_grid, var, 20, row, col)
-         self.coil_values.append(var)
+         field = CoilFields(coils_grid, coil, 20, row, col)
          self.coil_fields.append(field)
 
      ## SuperCycle Frame
@@ -133,15 +142,15 @@ class BeamMod(BaseTab):
 
      sing_coil_tab = tk.Frame(cycle_notebook, bg="lightgreen")
 
-     self.wave_opt = tk.StringVar(self)
-     self.menu_opt = tk.StringVar(self)
-     self.wave_opt.set(self.waveforms[0]);
-     self.menu_opt.set(self.coil_names[0]);
+     #self.wave_opt = tk.StringVar(self)
+     #self.menu_opt = tk.StringVar(self)
+     #self.wave_opt.set(self.waveforms[0]);
+     #self.menu_opt.set(self.coil_names[0]);
 
-     tk.OptionMenu(sing_coil_tab, self.menu_opt, self.coil_names[0], *self.coil_names[1:], command=lambda x:print(f"Selected {x}")).pack(side="left", padx=5, pady=5)
-     tk.Button(sing_coil_tab, text="Load WaveForm", command=lambda : print("Load Sinwave Button Pressed")).pack(side="left", padx=5, pady=5)
-     tk.Button(sing_coil_tab, text="Enable Trigger", command=lambda : print("Enter Trigger State Button Pressed")).pack(side="left", padx=5, pady=5)
-     tk.Button(sing_coil_tab, text="Stop", command=lambda : print(f"Stop Button Pressed, {self.coil_fields[0].field.get_monitors()['freq'].set(1)}")).pack(side="left", padx=5, pady=5)
+     #tk.OptionMenu(sing_coil_tab, self.menu_opt, self.coil_names[0], *self.coil_names[1:], command=lambda x:print(f"Selected {x}")).pack(side="left", padx=5, pady=5)
+     #tk.Button(sing_coil_tab, text="Load WaveForm", command=lambda : print("Load Sinwave Button Pressed")).pack(side="left", padx=5, pady=5)
+     #tk.Button(sing_coil_tab, text="Enable Trigger", command=lambda : print("Enter Trigger State Button Pressed")).pack(side="left", padx=5, pady=5)
+     #tk.Button(sing_coil_tab, text="Stop", command=lambda : print(f"Stop Button Pressed, {self.coil_fields[0].field.get_monitors()['freq'].set(1)}")).pack(side="left", padx=5, pady=5)
 
      cycle_notebook.add(sup_cyc_tab, text="Super Cycle")
      cycle_notebook.add(sing_coil_tab, text="Single Coil")

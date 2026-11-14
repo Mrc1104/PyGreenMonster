@@ -25,11 +25,11 @@ class TriggerState(IntEnum):
     Enable  = 0
     Disable = 1
 class CoilStatus(IntEnum):
-    Off     = 0
-    Config  = 1
-    Trigger = 2
-    Test    = 3
-    Unknown = 4
+    OFF     = 0
+    CONFIG  = 1
+    TRIGGER = 2
+    TEST    = 3
+    UNKNOWN = 4
 class CoilType(IntEnum):
     Coil   = 0
     Energy = 1
@@ -90,6 +90,7 @@ class BMWCoils:
 class BeamModCoils:
     def __init__(self):
         self._ncoils = ctypes.c_size_t(0)
+        self._base_addr = None
         self._base_addr  = CreateListOfCoils(ctypes.byref(self._ncoils))
         if not self._base_addr:
             raise MemoryError(f"{_lib_name} could not allocate coil array!")
