@@ -3,6 +3,7 @@ from typing import Union
 from pathlib import Path
 import ctypes
 import os
+import Bindings.ThQueue as Msg
 _dir = Path(__file__).parent.resolve()
 _lib_name = "libBMW.so"
 BMWLib = ctypes.CDLL(str(_dir / _lib_name))
@@ -34,11 +35,28 @@ class CoilType(IntEnum):
     Coil   = 0
     Energy = 1
     Empty  = 2
+class BMWMsgType(IntEnum):
+    REQUEST = 0
+    COMMAND = 1
+class BMWSubSys(IntEnum):
+    Freq = 0
+    Ampl = 1
+    Cycl = 2
+    Wave = 3
+    Trig = 4
+    Stat = 5
+    Erro = 6
+class BMWMsg(ctypes.Structure):
+    _fields_ = [("coil"    , ctypes.c_void_p),
+                ("msg_type", ctypes.c_int),
+                ("msg_sys" , ctypes.c_int),
+                ("content" , Msg.Message)]
+
 CreateListOfCoils = wrap_function(BMWLib, "CreateListOfHallACoils", OpaquePointer  , [ctypes.POINTER(ctypes.c_size_t)])
 DeleteListOfCoils = wrap_function(BMWLib, "DestroyListOfCoils"    , None           , [OpaquePointer, ctypes.c_size_t] )
 GetCoilMemSize    = wrap_function(BMWLib, "GetCoilMemSize"        , ctypes.c_size_t, None                             )
 
-SetCoilAmplitude  = wrap_function(BMWLib, "SetBMWAmplitude"       , ctypes.c_bool  , [OpaquePointer, ctypes.c_double] )
+SetCoilAmplitude  = wrap_function(BMWLib, "SetBMWAmplitude"      , ctypes.c_bool  , [OpaquePointer, ctypes.c_double] )
 SetCoilWaveType   = wrap_function(BMWLib, "SetBMWWave"           , ctypes.c_bool  , [OpaquePointer, ctypes.c_int]     )
 SetCoilFrequency  = wrap_function(BMWLib, "SetBMWFrequency"      , ctypes.c_bool  , [OpaquePointer, ctypes.c_double]  )
 SetCoilCycles     = wrap_function(BMWLib, "SetBMWCycles"         , ctypes.c_bool  , [OpaquePointer, ctypes.c_int]     )
@@ -54,6 +72,30 @@ DisableBeamMod    = wrap_function(BMWLib, "DisableBeamMod"        , ctypes.c_boo
 IsBeamModEnabled  = wrap_function(BMWLib, "isBeamModEnabled"      , ctypes.c_bool  , None                             )
 
 BeamModStartup    = wrap_function(BMWLib, "BeamModStartup"        , ctypes.c_bool  , None                             )
+BeamModShutdown   = wrap_function(BMWLib, "BMWShutdown"           , None           , None                             )
+
+GetReceiver       = wrap_function(BMWLib, "GetBMWReceiver"        , OpaquePointer  , None                             )
+GetSender         = wrap_function(BMWLib, "GetBMWSender"          , OpaquePointer  , None                             )
+CheckForMsg       = wrap_function(BMWLib, "CheckForMsg"           , ctypes.c_bool  , [OpaquePointer, ctypes.POINTER(BMWMsg)])
+SendMsg           = wrap_function(BMWLib, "SendMsg"               , None           , [OpaquePointer, ctypes.POINTER(BMWMsg)])
+CreateMsg         = wrap_function(BMWLib, "CreateBMWMessage"      , BMWMsg         , [ctypes.c_void_p, ctypes.c_int, ctypes.c_int, Msg.Message])
+DeleteMsg         = wrap_function(BMWLib, "DeleteBMWMessage"      , None           , [ctypes.POINTER(BMWMsg)]         )
+
+class BMWMsgSender(OpaquePointer):
+    def __init__(self):
+        self._sender = GetSender()
+    def Send(self, msg: BMWMsg):
+        SendMsg(self._sender, ctypes.byref(msg))
+        return
+        
+class BMWMsgReceiver(OpaquePointer):
+    def __init__(self):
+        self._receiver = GetReceiver()
+    def CheckForMsg(self):
+        msg = BMWMsg()
+        new_message_flag = CheckForMsg(self._receiver, ctypes.byref(msg))
+        return new_message_flag, msg
+
 
 class BMWCoils:
     def __init__(self, ptr):

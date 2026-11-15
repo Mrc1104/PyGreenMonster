@@ -2,6 +2,7 @@
 #include "Coil.h"
 #include "MetaData.h"
 #include "GlobalEnable.h"
+#include "Manager.h"
 #include <new>
 #include <thread>
 #include <chrono>
@@ -136,6 +137,7 @@ bool BeamModStartup()
 	// is instantiated. It waits for a set time and then
 	// attempts to read the value
 	using namespace BMW;
+	auto& manager       = Manager::Instance();
 	auto& master_switch = MasterSwitch::Instance();
 	std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	return master_switch.isEnabled();

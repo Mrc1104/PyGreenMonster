@@ -4,8 +4,14 @@ import GUI.utils as u
 import GUI.Colors as gmc
 from GUI.tabs.gm_tab import BaseTab
 import Bindings.RemexClient as Remex
+import Bindings.BMW as bmw
+import Bindings.ThQueue as Msg
 
 class Example(BaseTab):
+  def SendExampleMsg(self):
+    for coil in self.CoilManager:
+        self.sender.Send(bmw.CreateMsg(coil, bmw.BMWMsgType(0), bmw.BMWSubSys(0), Msg.CreateDblMsg(0.0)))
+    return
   def __init__(self, tab):
     super().__init__(tab)
     ## Tools frame
@@ -17,6 +23,14 @@ class Example(BaseTab):
             bg="skyblue",
             ).pack(padx=5, pady=5)
     tk.Label(tools_frame).pack(padx=5, pady=5)
+    print(f"BeamMod Startup = {bmw.BeamModStartup()}")
+
+    self.CoilManager = bmw.BeamModCoils()
+    self.sender = bmw.BMWMsgSender()
+
+    apply_frame = tk.Frame(tools_frame, bg=gmc.pewter)
+    apply_frame.pack(fill='x')
+    tk.Button(apply_frame, text="Apply", width=10, font=("Arial", 10), command=self.SendExampleMsg).pack(side = "left", fill='x', padx=(5,5), pady=(2,2), expand=True)
 
 # Tools and Filters tabs
     notebook = ttk.Notebook(tools_frame)
@@ -99,7 +113,7 @@ class Example(BaseTab):
     
     self.bm_test_index.set(0)
     self.bm_test_setting.set(self.button_titles[self.bm_test_index.get()])
-
-
+	#BMWMsg CreateBMWMessage(void* coil, BMWMsgtype type, BMWMsgSubSys sys, Message msg);
   def CleanUp(self):
+     bmw.BeamModShutdown()
      print("Example::Destory called")

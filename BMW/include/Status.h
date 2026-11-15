@@ -4,7 +4,7 @@
 #include "QwObserver.h"
 #include <string_view>
 #include <string>
-enum class Status : int
+enum Status
 {
 	Off = 0,
 	Config,
