@@ -10,14 +10,13 @@ Manager::Manager() : outgoing_{}, sender_(outgoing_), incoming_{}, incoming_send
 			PrintBMWMsg(&msg);
 			DeleteBMWMessage(&msg);
 		}
-
 	});
  
 }
 
 // How to prevent leaking memory from the queues...?
 Manager::~Manager() {
-	worker_.interrupt();
+	CleanUp();
 }
 
 Manager& Manager::Instance()
@@ -32,7 +31,7 @@ Sender<BMWMsg>*    Manager::GetIncoming() { return &incoming_sender_; }
 void Manager::CleanUp()
 {
 	worker_.interrupt();
-	worker_.join();
+	if(worker_.joinable()) worker_.join();
 }
 
 //////////////////////////////////////

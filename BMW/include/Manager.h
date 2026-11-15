@@ -21,7 +21,6 @@ namespace BMW
 
 		Manager();
 		~Manager();
-		void run(Receiver<BMWMsg> *receiver);
 	public:
 		static Manager& Instance();
 		Manager(Manager const&) = delete;
