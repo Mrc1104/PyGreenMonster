@@ -1,16 +1,15 @@
 #pragma once
 #include "Queue.h"
 #include "Sender.h"
-#include <memory>
 
 template<typename T>
 class Receiver
 {
-	ThQueue<T> q;
+	threadsafe_queue<T> q;
 public:
-	T* try_pop();
+	bool try_and_pop(T& val)
+	T wait_and_pop();
 	operator Sender<T>();
-
 };
 
 template<typename T>
@@ -20,7 +19,13 @@ Receiver<T>::operator Sender<T>()
 }
 
 template<typename T>
-T* Receiver<T>::try_pop()
+bool Receiver<T>::try_and_pop(T& val)
 {
-	return q.try_pop();
+	return q.try_pop(val);
+}
+
+template<typename T>
+T Receiver<T>::wait_and_pop()
+{
+	return q.wait_and_pop();
 }

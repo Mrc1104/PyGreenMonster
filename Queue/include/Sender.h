@@ -9,24 +9,26 @@ class Sender
 public:
 	Sender();
 	explicit Sender(ThQueue<T>* q);
-	void send(T* msg);
 	void attach(ThQueue<T>* q);
+	void send(T msg);
 };
 
 template<typename T>
 Sender<T>::Sender() : q{nullptr}{}
+
 template<typename T>
 Sender<T>::Sender(ThQueue<T>* src) : q(src) {}
-template<typename T>
-void Sender<T>::send(T* msg)
-{
-	if(q) {
-		q->push(msg);
-	}
-}
+
 template<typename T>
 void Sender<T>::attach(ThQueue<T>* src)
 {
 	q = src;
 }
 
+template<typename T>
+void Sender<T>::send(T msg)
+{
+	if(q) {
+		q->push(msg);
+	}
+}
