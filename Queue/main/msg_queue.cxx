@@ -27,7 +27,7 @@ void print(Message& msg)
     }
 }
 
-void writer(threadsafe_queue<Message>* q)
+void writer(ThQueue<Message>* q)
 {
 	int counter = 0;
 	while(is_done.load() == false) {
@@ -41,7 +41,7 @@ void writer(threadsafe_queue<Message>* q)
 	}
 }
 
-void reader(threadsafe_queue<Message>* q)
+void reader(ThQueue<Message>* q)
 {
 	while(is_done.load() == false) {
 		auto msg = q->wait_and_pop();
@@ -57,7 +57,7 @@ int main()
 	std::cout << "Enter 'q' to quit...\n";
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	threadsafe_queue<Message> q;
+	ThQueue<Message> q;
 	std::thread writer_th(writer, &q);
 	std::thread reader_th(reader, &q);
 

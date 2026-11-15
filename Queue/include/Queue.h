@@ -6,7 +6,7 @@
 #include "Interrupt.h"
 
 template<typename T>
-class threadsafe_queue
+class ThQueue
 {
 	static_assert(std::is_trivially_copyable_v<T>,
 			"This queue is only for trivially copyable objects!");
@@ -14,14 +14,14 @@ class threadsafe_queue
 	std::queue<T> data_queue;
 	std::condition_variable_any data_cond;
 public:
-	threadsafe_queue() = default;
+	ThQueue() = default;
 	void push(T val);
 	T wait_and_pop();
 	bool try_and_pop(T& val);
 	bool empty() const;
 };
 template<typename T>
-void threadsafe_queue<T>::push(T val)
+void ThQueue<T>::push(T val)
 {
 	std::lock_guard lk(mut);
 	data_queue.push(val);
@@ -29,7 +29,7 @@ void threadsafe_queue<T>::push(T val)
 }
 
 template<typename T>
-T threadsafe_queue<T>::wait_and_pop()
+T ThQueue<T>::wait_and_pop()
 {
 	std::unique_lock lk(mut);
 	interruptible_wait(data_cond, lk, [this]{ return !data_queue.empty(); });
@@ -39,7 +39,7 @@ T threadsafe_queue<T>::wait_and_pop()
 }
 
 template<typename T>
-bool threadsafe_queue<T>::try_and_pop(T& val)
+bool ThQueue<T>::try_and_pop(T& val)
 {
 	std::lock_guard lk(mut);
 	if(data_queue.empty()) return false;
@@ -49,7 +49,7 @@ bool threadsafe_queue<T>::try_and_pop(T& val)
 }
 
 template<typename T>
-bool threadsafe_queue<T>::empty() const
+bool ThQueue<T>::empty() const
 {
 	std::lock_guard lk(mut);
 	return data_queue.empty();
