@@ -5,9 +5,9 @@
 template<typename T>
 class Receiver
 {
-	threadsafe_queue<T> q;
+	ThQueue<T> q;
 public:
-	bool try_and_pop(T& val)
+	bool try_and_pop(T& val);
 	T wait_and_pop();
 	operator Sender<T>();
 };
@@ -21,7 +21,7 @@ Receiver<T>::operator Sender<T>()
 template<typename T>
 bool Receiver<T>::try_and_pop(T& val)
 {
-	return q.try_pop(val);
+	return q.try_and_pop(val);
 }
 
 template<typename T>

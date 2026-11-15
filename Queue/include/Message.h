@@ -80,5 +80,8 @@ extern "C"
 	Message CreateDblMsg(double msg);
 	Message CreateStrMsg(const char* msg);
 	void DeleteMessage(Message* msg);
+
+	void PrintMessage(Message* msg);
+
 };
 

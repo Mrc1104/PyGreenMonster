@@ -27,9 +27,9 @@ class MessagePayload(ctypes.Union):
                 ("dbl_msg", ctypes.c_double),
                 ("str_msg", ctypes.c_char_p)]
 class Message(ctypes.Structure):
-    _fields_ = [("msg_type", MessageType),
+    _fields_ = [("msg_type", ctypes.c_int),
                 ("msg"     , MessagePayload)]
-CreateIntMsg = wrap_function(ThQueueLib, "CreateIntMsg", Message, ctypes.int     )
-CreateDblMsg = wrap_function(ThQueueLib, "CreateDblMsg", Message, ctypes.double  )
-CreateStrMsg = wrap_function(ThQueueLib, "CreateStrMsg", Message, ctypes.c_char_p)
-DeleteMsg    = wrap_function(ThQueueLib, "DeleteMessage", None  , ctypes.POINTER(Message))
+CreateIntMsg = wrap_function(ThQueueLib, "CreateIntMsg", Message, [ctypes.c_int]   )
+CreateDblMsg = wrap_function(ThQueueLib, "CreateDblMsg", Message, [ctypes.c_double])
+CreateStrMsg = wrap_function(ThQueueLib, "CreateStrMsg", Message, [ctypes.c_char_p])
+DeleteMsg    = wrap_function(ThQueueLib, "DeleteMessage", None  , [ctypes.POINTER(Message)])
