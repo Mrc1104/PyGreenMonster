@@ -2,23 +2,23 @@
 #include <type_traits>
 #include <string.h> // ::strdup
 #include <cstdlib>  // std::free
-enum MessageType
-{
-	Int,
-	Double,
-	String
-};
-union MessagePayload {
-	int    int_msg;
-	double dbl_msg;
-	char*  str_msg;
-};
-	
-
-struct Message
-{
-	MessageType    type;
-	MessagePayload payload;
+extern "C" {
+	enum MessageType
+	{
+		Int    = 0,
+		Double = 1,
+		String = 3
+	};
+	union MessagePayload {
+		int    int_msg;
+		double dbl_msg;
+		char*  str_msg;
+	};
+	struct Message
+	{
+		MessageType    type;
+		MessagePayload payload;
+	};
 };
 
 
@@ -72,18 +72,13 @@ Message CreateMessage(T val) {
 	return Message{ type, Traits::Create(val)};
 }
 
-void DeleteMessage(Message& msg) noexcept {
-    switch (msg.type) {
-        case MessageType::Int:
-            MessageTypeTraits<int>::Destroy(msg.payload);
-            break;
-        case MessageType::Double:
-            MessageTypeTraits<double>::Destroy(msg.payload);
-            break;
-        case MessageType::String:
-            MessageTypeTraits<char*>::Destroy(msg.payload);
-            break;
-    }
-	return;
-}
+void DeleteMessage(Message& msg) noexcept;
+
+extern "C"
+{
+	Message CreateIntMsg(int msg);
+	Message CreateDblMsg(double msg);
+	Message CreateStrMsg(const char* msg);
+	void DeleteMessage(Message* msg);
+};
 
