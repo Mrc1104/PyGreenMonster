@@ -15,7 +15,7 @@ file(GLOB INC CONFIGURE_DEPENDS
 
 add_compile_options(-Wall -Wextra)
 
-add_library(${PROJECT_NAME} INTERFACE ${SRC})
+add_library(${PROJECT_NAME} SHARED ${SRC})
 
 target_sources(${PROJECT_NAME}
 	PUBLIC

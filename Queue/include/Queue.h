@@ -3,6 +3,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <type_traits>
+#include "Interrupt.h"
 
 template<typename T>
 class threadsafe_queue
@@ -11,7 +12,7 @@ class threadsafe_queue
 			"This queue is only for trivially copyable objects!");
 	mutable std::mutex mut;
 	std::queue<T> data_queue;
-	std::condition_variable data_cond;	
+	std::condition_variable_any data_cond;
 public:
 	threadsafe_queue() = default;
 	void push(T val);
@@ -31,7 +32,7 @@ template<typename T>
 T threadsafe_queue<T>::wait_and_pop()
 {
 	std::unique_lock lk(mut);
-	data_cond.wait(lk, [this]{ return !data_queue.empty(); });
+	interruptible_wait(data_cond, lk, [this]{ return !data_queue.empty(); });
 	auto res = data_queue.front();
 	data_queue.pop();
 	return res;
